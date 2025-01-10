@@ -1,6 +1,6 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Template1 from './pages/template1';
+// import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Template1 from './pages/Template1';
 import BiodataForm from './pages/BiodataMaker';
 import Homepage from './pages/HomePage';
 

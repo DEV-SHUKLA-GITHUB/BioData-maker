@@ -1,7 +1,7 @@
-import React from 'react';
+// import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, FileText, Download, Paintbrush, Settings, HelpCircle, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Heart, FileText, Download, Paintbrush,HelpCircle } from 'lucide-react';
+// import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import img1 from '../assets/1.jpg'
 import img2 from '../assets/2.jpg'
