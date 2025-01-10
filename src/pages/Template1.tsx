@@ -1,12 +1,12 @@
 // BiodataTemplate.tsx
-import React from 'react';
+// import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 import { Download } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import bg from '../assets/bg1.jpg';
-import { div } from 'framer-motion/client';
+// import { div } from 'framer-motion/client';
 
 const BiodataTemplate = () => {
   const location = useLocation();
