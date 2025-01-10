@@ -139,7 +139,7 @@ const BiodataForm = () => {
       e.preventDefault();
       
       const processedData = Object.entries(formData).reduce((acc, [section, fields]) => {
-          acc[section as keyof FormDataWithLabels] = Object.entries(fields).reduce((fieldAcc, [key, config]) => {
+          acc[section as keyof FormDataWithLabels] = Object.entries(fields).reduce((fieldAcc, [_, config]) => {
               // Use the label as the key and the value as the value
               fieldAcc[config.label] = config.value; 
               return fieldAcc;
