@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Plus, User, Users, PhoneCall, Camera, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, User, Users, PhoneCall, Camera, ChevronDown, ChevronUp, GripVertical, X, Save, Edit2 } from 'lucide-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 interface FormSection {
     [key: string]: string;
@@ -67,6 +72,63 @@ const BiodataForm = () => {
     const [tempLabel, setTempLabel] = useState<string>('');
     const navigate = useNavigate();
 
+
+        // Updated handleLabelChange with validation
+        const handleLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string) => {
+            if (!newLabel.trim()) return;
+            setFormData(prev => ({
+                ...prev,
+                [section]: {
+                    ...prev[section],
+                    [field]: {
+                        ...prev[section][field],
+                        label: newLabel
+                    }
+                }
+            }));
+            setEditingLabel(null);
+            setTempLabel('');
+        };
+    
+        // Enhanced date handling
+        const handleDateChange = (date: Date | null, section: keyof FormDataWithLabels, field: string) => {
+            const value = date ? date.toISOString().split('T')[0] : '';
+            handleInputChange(section, field, value);
+        };
+    
+        // Improved drag and drop handling
+        const handleDragEnd = (result: any, section: keyof FormDataWithLabels) => {
+            if (!result.destination) return;
+            
+            const items = Array.from(fieldOrder[section]);
+            const [reorderedItem] = items.splice(result.source.index, 1);
+            items.splice(result.destination.index, 0, reorderedItem);
+            
+            setFieldOrder(prev => ({
+                ...prev,
+                [section]: items
+            }));
+        };
+    
+        // Add new field with unique key
+        const handleAddField = (section: keyof FormDataWithLabels) => {
+            const newFieldKey = `customField_${Date.now()}`;
+            setFormData(prev => ({
+                ...prev,
+                [section]: {
+                    ...prev[section],
+                    [newFieldKey]: {
+                        label: 'New Field',
+                        value: ''
+                    }
+                }
+            }));
+            setFieldOrder(prev => ({
+                ...prev,
+                [section]: [...prev[section], newFieldKey]
+            }));
+        };
+
     const handleInputChange = (section: keyof FormDataWithLabels, field: string, value: string) => {
         setFormData(prev => ({
             ...prev,
@@ -85,48 +147,76 @@ const BiodataForm = () => {
         setTempLabel(formData[section][field].label);
     };
 
-    const handleLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string) => {
-        setFormData(prev => ({
-            ...prev,
-            [section]: {
-                ...prev[section],
-                [field]: {
-                    ...prev[section][field],
-                    label: newLabel
-                }
-            }
-        }));
-        setEditingLabel(null);
-        setTempLabel('');
-    };
+    // const handleLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string) => {
+    //     setFormData(prev => ({
+    //         ...prev,
+    //         [section]: {
+    //             ...prev[section],
+    //             [field]: {
+    //                 ...prev[section][field],
+    //                 label: newLabel
+    //             }
+    //         }
+    //     }));
+    //     setEditingLabel(null);
+    //     setTempLabel('');
+    // };
 
     const cancelLabelEdit = () => {
         setEditingLabel(null);
         setTempLabel('');
     };
 
-    const handleDeleteField = (section: keyof FormDataWithLabels, field: string) => {
-        const newSection = { ...formData[section] };
-        delete newSection[field];
-        setFormData(prev => ({
+    const handleDeleteField = (section: keyof FormDataWithLabels, fieldKey: string) => {
+        // Remove the field from formData
+        setFormData((prev) => {
+            const updatedSection = { ...prev[section] };
+            delete updatedSection[fieldKey];
+            return {
+                ...prev,
+                [section]: updatedSection,
+            };
+        });
+    
+        // Remove the field from fieldOrder
+        setFieldOrder((prev) => ({
             ...prev,
-            [section]: newSection
+            [section]: prev[section].filter((key) => key !== fieldKey),
         }));
     };
+    
 
-    const handleAddField = (section: keyof FormDataWithLabels) => {
-        const newFieldKey = `newField${Date.now()}`;
-        setFormData(prev => ({
-            ...prev,
-            [section]: {
-                ...prev[section],
-                [newFieldKey]: {
-                    label: 'New Field',
-                    value: ''
-                }
-            }
-        }));
-    };
+    // const handleAddField = (section: keyof FormDataWithLabels) => {
+    //     const newFieldKey = `newField${Date.now()}`;
+    //     setFormData(prev => ({
+    //         ...prev,
+    //         [section]: {
+    //             ...prev[section],
+    //             [newFieldKey]: {
+    //                 label: 'New Field',
+    //                 value: ''
+    //             }
+    //         }
+    //     }));
+    // };
+    const [fieldOrder, setFieldOrder] = useState<Record<string, string[]>>({
+        personalDetails: Object.keys(initialFormData.personalDetails),
+        familyDetails: Object.keys(initialFormData.familyDetails),
+        contactDetails: Object.keys(initialFormData.contactDetails)
+    });
+
+    // const handleDragEnd = (result: any, section: keyof FormDataWithLabels) => {
+    //     if (!result.destination) return;
+        
+    //     const items = Array.from(fieldOrder[section]);
+    //     const [reorderedItem] = items.splice(result.source.index, 1);
+    //     items.splice(result.destination.index, 0, reorderedItem);
+        
+    //     setFieldOrder(prev => ({
+    //         ...prev,
+    //         [section]: items
+    //     }));
+    // };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -136,23 +226,30 @@ const BiodataForm = () => {
         }
     };
     const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      
-      const processedData = Object.entries(formData).reduce((acc, [section, fields]) => {
-          acc[section as keyof FormDataWithLabels] = Object.entries(fields).reduce((fieldAcc, [_, config]) => {
-              // Use the label as the key and the value as the value
-              fieldAcc[config.label] = config.value; 
-              return fieldAcc;
-          }, {} as FormSection);
-          return acc;
-      }, {} as BiodataFormData);
-      
-      if (image) {
-          processedData.image = image;
-      }
-      
-      navigate('/template', { state: { formData: processedData } });
-  };
+        e.preventDefault();
+        
+        const processedData = Object.entries(formData).reduce((acc, [sectionKey, fields]) => {
+            const section = sectionKey as keyof FormDataWithLabels;
+            
+            // Use fieldOrder to maintain drag-and-drop sequence
+            acc[section] = fieldOrder[section].reduce((fieldAcc, fieldKey) => {
+                const config = fields[fieldKey];
+                if (config) { // Ensure field exists
+                    fieldAcc[config.label] = config.value;
+                }
+                return fieldAcc;
+            }, {} as FormSection);
+    
+            return acc;
+        }, {} as BiodataFormData);
+        
+        if (image) {
+            processedData.image = image;
+        }
+        
+        navigate('/template', { state: { formData: processedData } });
+    };
+    
   
     const sectionIcons = {
         personalDetails: <User className="w-5 h-5" />,
@@ -171,139 +268,193 @@ const BiodataForm = () => {
     };
 
     return (
-        <motion.div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 py-8 px-4" initial="hidden" animate="visible" variants={containerVariants}>
-            <Card className="max-w-4xl mx-auto shadow-xl">
-                <CardHeader className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-t-lg">
-                    <CardTitle className="text-2xl font-bold text-center">Create Your Marriage Biodata</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <motion.div className="flex flex-col items-center space-y-4" whileHover={{ scale: 1.02 }}>
-                            <div className="relative w-32 h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-pink-200">
-                                {imagePreview ? (
-                                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+        <motion.div className="min-h-screen bg-gray-50 py-8 px-4" initial="hidden" animate="visible" variants={containerVariants}>
+        <Card className="max-w-2xl mx-auto shadow-lg">
+            <CardHeader className="bg-gray-900 text-white rounded-t-lg">
+                <CardTitle className="text-xl font-semibold text-center">Create Marriage Biodata</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <motion.div className="flex flex-col items-center space-y-4">
+                        <div className="relative w-28 h-28 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 hover:border-pink-300 transition-all">
+                            {imagePreview ? (
+                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                    <Camera className="w-8 h-8 text-gray-400" />
+                                </div>
+                            )}
+                        </div>
+                        <Label htmlFor="image" className="cursor-pointer bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                            Upload Profile Photo
+                        </Label>
+                        <Input id="image" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                    </motion.div>
+
+                    {(Object.keys(formData) as Array<keyof FormDataWithLabels>).map((section) => (
+                        <motion.div key={section} className="rounded-lg bg-white shadow-sm">
+                            <motion.button
+                                type="button"
+                                className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                                onClick={() => setExpandedSection(section)}
+                            >
+                                <div className="flex items-center space-x-3">
+                                    {sectionIcons[section]}
+                                    <span className="text-base font-medium text-gray-700">
+                                        {section.split(/(?=[A-Z])/).join(' ')}
+                                    </span>
+                                </div>
+                                {expandedSection === section ? (
+                                    <ChevronUp className="text-gray-500" />
                                 ) : (
-                                    <Camera className="w-12 h-12 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-400" />
+                                    <ChevronDown className="text-gray-500" />
                                 )}
-                            </div>
-                            <Label htmlFor="image" className="cursor-pointer bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition-colors">
-                                Upload Photo
-                            </Label>
-                            <Input id="image" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-                        </motion.div>
+                            </motion.button>
 
-                        {(Object.keys(formData) as Array<keyof FormDataWithLabels>).map((section) => (
-                            <motion.div key={section} className="rounded-lg border border-gray-200 overflow-hidden">
-                                <motion.button
-                                    type="button"
-                                    className={`w-full p-4 flex items-center justify-between ${expandedSection === section ? 'bg-pink-50' : 'bg-white'}`}
-                                    onClick={() => setExpandedSection(section)}
-                                    whileHover={{ backgroundColor: 'rgba(255, 192, 203, 0.1)' }}
-                                >
-                                    <div className="flex items-center space-x-2">
-                                        {sectionIcons[section]}
-                                        <span className="text-lg font-semibold">{section.split(/(?=[A-Z])/).join(' ')}</span>
-                                    </div>
-                                    {expandedSection === section ? <ChevronUp /> : <ChevronDown />}
-                                </motion.button>
-
-                                <motion.div
+                            <motion.div
                                     variants={formSectionVariants}
                                     initial="collapsed"
                                     animate={expandedSection === section ? "expanded" : "collapsed"}
-                                    transition={{ duration: 0.3 }}
-                                    className="p-4"
+                                    className="px-4"
                                 >
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {Object.entries(formData[section]).map(([field, config]) => (
-                                            <motion.div key={field} className="space-y-2 relative" whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-                                                <div className="flex items-center space-x-2">
-                                                    {editingLabel === `${section}-${field}` ? (
-                                                        <div className="flex items-center space-x-2 w-full">
-                                                            <Input
-                                                                value={tempLabel}
-                                                                onChange={(e) => setTempLabel(e.target.value)}
-                                                                autoFocus
-                                                                className="flex-grow"
-                                                            />
-                                                            <Button
-                                                                type="button"
-                                                                variant="outline"
-                                                                size="sm"
-                                                                onClick={() => handleLabelChange(section, field, tempLabel)}
-                                                            >
-                                                                Save
-                                                            </Button>
-                                                            <Button
-                                                                type="button"
-                                                                variant="outline"
-                                                                size="sm"
-                                                                onClick={cancelLabelEdit}
-                                                            >
-                                                                Cancel
-                                                            </Button>
-                                                        </div>
-                                                    ) : (
-                                                        <div className='flex content-between items-center justify-between w-full'>
-                                                            <Label>{config.label}</Label>
-                                                            <Button
-                                                                type="button"
-                                                                variant="outline"
-                                                                size="sm"
-                                                                className=''
-                                                                onClick={() => startEditingLabel(section, field)}
-                                                            >
-                                                                Edit Label
-                                                            </Button>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <Input
-                                                    value={config.value}
-                                                    onChange={(e) => handleInputChange(section, field, e.target.value)}
-                                                    className="border-gray-200 focus:ring-pink-500 focus:border-pink-500"
-                                                    placeholder={`Enter ${config.label}`}
-                                                />
-
-                                                <Button
-                                                    type="button"
-                                                    onClick={() => handleDeleteField(section, field)}
-                                                    variant="destructive"
-                                                    size="sm"
-                                                    className="absolute right-0 top-[45%]"
+                                    <DragDropContext onDragEnd={(result) => handleDragEnd(result, section)}>
+                                        <Droppable droppableId={section}>
+                                            {(provided) => (
+                                                <div 
+                                                    {...provided.droppableProps} 
+                                                    ref={provided.innerRef}
+                                                    className="space-y-3"
                                                 >
-                                                    Delete
-                                                </Button>
-                                            </motion.div>
-                                        ))}
-                                        
-                                        <Button
-                                            type="button"
-                                            onClick={() => handleAddField(section)}
-                                            variant="outline"
-                                            className="flex items-center space-x-2"
-                                        >
-                                            <Plus className="w-4 h-4" />
-                                            <span>Add New Field</span>
-                                        </Button>
-                                    </div>
+                                                    {fieldOrder[section].map((fieldKey, index) => {
+                                                        const config = formData[section][fieldKey];
+                                                        return (
+                                                            <Draggable 
+                                                                key={fieldKey} 
+                                                                draggableId={fieldKey} 
+                                                                index={index}
+                                                            >
+                                                                {(provided) => (
+                                                                    <div
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.draggableProps}
+                                                                        className="bg-gray-50 rounded-lg p-3 shadow-sm"
+                                                                    >
+                                                                        <div className="flex items-start space-x-2">
+                                                                            <div 
+                                                                                {...provided.dragHandleProps}
+                                                                                className="pt-2.5 cursor-move text-gray-400 hover:text-gray-600"
+                                                                            >
+                                                                                <GripVertical className="w-4 h-4" />
+                                                                            </div>
+                                                                            
+                                                                            <div className="flex-1 space-y-2">
+                                                                                {editingLabel === `${section}-${fieldKey}` ? (
+                                                                                    <div className="flex space-x-2">
+                                                                                        <Input
+                                                                                            value={tempLabel}
+                                                                                            onChange={(e) => setTempLabel(e.target.value)}
+                                                                                            autoFocus
+                                                                                            className="h-8"
+                                                                                            onKeyPress={(e) => e.key === 'Enter' && handleLabelChange(section, fieldKey, tempLabel)}
+                                                                                        />
+                                                                                        <Button
+                                                                                            variant="ghost"
+                                                                                            size="sm"
+                                                                                            onClick={() => handleLabelChange(section, fieldKey, tempLabel)}
+                                                                                            className="h-8 px-2"
+                                                                                        >
+                                                                                            <Save className="w-4 h-4" />
+                                                                                        </Button>
+                                                                                        <Button
+                                                                                            variant="ghost"
+                                                                                            size="sm"
+                                                                                            onClick={cancelLabelEdit}
+                                                                                            className="h-8 px-2"
+                                                                                        >
+                                                                                            <X className="w-4 h-4" />
+                                                                                        </Button>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div className="flex items-center justify-between">
+                                                                                        <Label className="text-sm font-medium text-gray-700">
+                                                                                            {config?.label}
+                                                                                        </Label>
+                                                                                        <Button
+                                                                                            variant="ghost"
+                                                                                            size="sm"
+                                                                                            onClick={() => startEditingLabel(section, fieldKey)}
+                                                                                            className="h-6 px-2"
+                                                                                        >
+                                                                                            <Edit2 className="w-3.5 h-3.5 text-gray-500" />
+                                                                                        </Button>
+                                                                                    </div>
+                                                                                )}
+
+                                                                                {/* Date Picker Integration */}
+                                                                                {fieldKey === 'dateOfBirth' ? (
+                                                                                    <DatePicker
+                                                                                        selected={config.value ? new Date(config.value) : null}
+                                                                                        onChange={(date) => handleDateChange(date, section, fieldKey)}
+                                                                                        dateFormat="yyyy-MM-dd"
+                                                                                        className="w-full border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300"
+                                                                                        placeholderText="Select date of birth"
+                                                                                    />
+                                                                                ) : (
+                                                                                    <Input
+                                                                                        value={config?.value}
+                                                                                        onChange={(e) => handleInputChange(section, fieldKey, e.target.value)}
+                                                                                        className="border-gray-200 focus:ring-1 focus:ring-pink-300 focus:border-pink-300 text-sm"
+                                                                                        placeholder={`Enter ${config?.label}`}
+                                                                                    />
+                                                                                )}
+                                                                            </div>
+
+                                                                            <Button
+                                                                                type="button"
+                                                                                onClick={() => handleDeleteField(section, fieldKey)}
+                                                                                variant="ghost"
+                                                                                size="sm"
+                                                                                className="text-gray-400 hover:text-red-600 h-8 px-2"
+                                                                            >
+                                                                                <X className="w-4 h-4" />
+                                                                            </Button>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            </Draggable>
+                                                        )
+                                                    })}
+                                                    {provided.placeholder}
+                                                </div>
+                                            )}
+                                        </Droppable>
+                                    </DragDropContext>
+
+                                    <Button
+                                        type="button"
+                                        onClick={() => handleAddField(section)}
+                                        variant="ghost"
+                                        className="w-full mt-3 text-sm text-gray-600 hover:bg-gray-100"
+                                    >
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add Field
+                                    </Button>
                                 </motion.div>
                             </motion.div>
                         ))}
 
-                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <Button
-                                type="submit"
-                                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-lg hover:bg-gradient-to-l transition-all duration-300"
-                            >
-                                Generate Biodata
-                            </Button>
-                        </motion.div>
-                    </form>
-                </CardContent>
-            </Card>
-        </motion.div>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <Button
+                            type="submit"
+                            className="w-full bg-gray-900 text-white hover:bg-gray-800 py-2.5 text-sm font-medium"
+                        >
+                            Generate Biodata
+                        </Button>
+                    </motion.div>
+                </form>
+            </CardContent>
+        </Card>
+    </motion.div>
     );
 };
 
