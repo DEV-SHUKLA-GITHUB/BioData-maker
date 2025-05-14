@@ -7,11 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Plus, User, Users, PhoneCall, Camera, ChevronDown, ChevronUp, GripVertical, X, Save, Edit2 } from 'lucide-react';
+import { Plus, User, Users, PhoneCall, Camera, ChevronDown, ArrowUp,ArrowDown,ChevronUp, GripVertical, X, Save, Edit2 } from 'lucide-react';
 import DatePicker from 'react-datepicker';
+import TimePicker from 'react-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
-
-
+import 'react-time-picker/dist/TimePicker.css';
+import 'react-clock/dist/Clock.css';
 interface FormSection {
     [key: string]: string;
 }
@@ -74,7 +75,10 @@ const BiodataForm = () => {
 
 
         // Updated handleLabelChange with validation
-        const handleLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string) => {
+        const handleLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string,e?: React.MouseEvent | React.KeyboardEvent) => {
+            if (e) {
+                e.preventDefault();
+            }
             if (!newLabel.trim()) return;
             setFormData(prev => ({
                 ...prev,
@@ -95,6 +99,26 @@ const BiodataForm = () => {
             const value = date ? date.toISOString().split('T')[0] : '';
             handleInputChange(section, field, value);
         };
+        const handleTimeChange = (time: string | null, section: keyof FormDataWithLabels, field: string) => {
+            console.log("Time selected:", time); // For debugging
+            
+            // If time doesn't include seconds, add them
+            let value = '';
+            if (time) {
+              const timeParts = time.split(':');
+              // If seconds are missing, add them
+              if (timeParts.length === 2) {
+                value = `${time}:00`;
+              } else {
+                value = time;
+              }
+            }
+            
+            // Update the form data
+            handleInputChange(section, field, value);
+          };
+          
+        
     
         // Improved drag and drop handling
         const handleDragEnd = (result: any, section: keyof FormDataWithLabels) => {
@@ -227,7 +251,6 @@ const BiodataForm = () => {
     };
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
         const processedData = Object.entries(formData).reduce((acc, [sectionKey, fields]) => {
             const section = sectionKey as keyof FormDataWithLabels;
             
@@ -344,7 +367,9 @@ const BiodataForm = () => {
                                                                                 {...provided.dragHandleProps}
                                                                                 className="pt-2.5 cursor-move text-gray-400 hover:text-gray-600"
                                                                             >
-                                                                                <GripVertical className="w-4 h-4" />
+                                                                                {/* <GripVertical className="w-4 h-4" /> */}
+                                                                                <ArrowUp  className="w-4 h-4"/>
+                                                                                <ArrowDown  className="w-4 h-4"/>
                                                                             </div>
                                                                             
                                                                             <div className="flex-1 space-y-2">
@@ -359,6 +384,7 @@ const BiodataForm = () => {
                                                                                         />
                                                                                         <Button
                                                                                             variant="ghost"
+                                                                                            type='button'
                                                                                             size="sm"
                                                                                             onClick={() => handleLabelChange(section, fieldKey, tempLabel)}
                                                                                             className="h-8 px-2"
@@ -368,6 +394,7 @@ const BiodataForm = () => {
                                                                                         <Button
                                                                                             variant="ghost"
                                                                                             size="sm"
+                                                                                            type='button'
                                                                                             onClick={cancelLabelEdit}
                                                                                             className="h-8 px-2"
                                                                                         >
@@ -389,24 +416,35 @@ const BiodataForm = () => {
                                                                                         </Button>
                                                                                     </div>
                                                                                 )}
-
                                                                                 {/* Date Picker Integration */}
                                                                                 {fieldKey === 'dateOfBirth' ? (
-                                                                                    <DatePicker
-                                                                                        selected={config.value ? new Date(config.value) : null}
-                                                                                        onChange={(date) => handleDateChange(date, section, fieldKey)}
-                                                                                        dateFormat="yyyy-MM-dd"
-                                                                                        className="w-full border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300"
-                                                                                        placeholderText="Select date of birth"
-                                                                                    />
-                                                                                ) : (
-                                                                                    <Input
-                                                                                        value={config?.value}
-                                                                                        onChange={(e) => handleInputChange(section, fieldKey, e.target.value)}
-                                                                                        className="border-gray-200 focus:ring-1 focus:ring-pink-300 focus:border-pink-300 text-sm"
-                                                                                        placeholder={`Enter ${config?.label}`}
-                                                                                    />
-                                                                                )}
+  <DatePicker
+    selected={config.value ? new Date(config.value) : null}
+    onChange={(date: Date | null) => handleDateChange(date, section, fieldKey)}
+    dateFormat="yyyy-MM-dd"
+    className="w-full border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300"
+    placeholderText="Select date of birth"
+  />
+) : fieldKey === 'timeOfBirth' ? ( 
+<TimePicker
+  value={config.value || ''}
+  onChange={(time: string | null) => handleTimeChange(time, section, fieldKey)}
+  className="w-100 border-gray-200 rounded-md"
+  format="HH:mm:ss a" // Format with seconds
+  disableClock={false}
+//   clearIcon={null}
+  required={false}
+//   amPmAriaLabel={"Select AM/PM"}
+  maxDetail={"second"} // Enable seconds selection
+/>
+) : (
+  <Input
+    value={config?.value}
+    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(section, fieldKey, e.target.value)}
+    className="border-gray-200 focus:ring-1 focus:ring-pink-300 focus:border-pink-300 text-sm"
+    placeholder={`Enter ${config?.label}`}
+  />
+)}
                                                                             </div>
 
                                                                             <Button

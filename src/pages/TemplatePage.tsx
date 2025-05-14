@@ -5,8 +5,6 @@ import { Download, LayoutGrid } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Template1 from './Template1';
-// import Template2 from '../components/templates/Template2';
-// import Template3 from '../components/templates/Template3';
 
 const BiodataTemplate = () => {
   const location = useLocation();
@@ -16,19 +14,43 @@ const BiodataTemplate = () => {
 
   const templates = [
     { id: 1, component: <Template1 formData={formData} />, preview: '/template1-preview.jpg' },
-    // { id: 2, component: <Template2 formData={formData} />, preview: '/template2-preview.jpg' },
-    // { id: 3, component: <Template3 formData={formData} />, preview: '/template3-preview.jpg' },
   ];
 
   const handleDownload = async (templateId: number) => {
     const element = document.getElementById(`template-${templateId}`);
     if (element) {
-      const canvas = await html2canvas(element);
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      // Set options for better quality and to capture background images
+      const canvas = await html2canvas(element, {
+        scale: 2, // Higher scale for better quality
+        useCORS: true, // Enable CORS to load external images
+        allowTaint: true, // Allow cross-origin images
+        backgroundColor: null, // Transparent background  
+        logging: true, // For debugging
+        onclone: (clonedDoc) => {
+          // Force background image to be loaded in the cloned document
+          const clonedElement = clonedDoc.getElementById(`template-${templateId}`);
+          if (clonedElement) {
+            clonedElement.style.width = '794px'; // A4 width in pixels at 96 DPI
+            clonedElement.style.height = '1123px'; // A4 height in pixels at 96 DPI
+          }
+        }
+      });
+      
+      // Get dimensions with the right aspect ratio
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Create PDF with A4 dimensions
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      // Add the image to the PDF, maintaining aspect ratio
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+      
       pdf.save(`biodata-template-${templateId}.pdf`);
     }
   };
@@ -61,12 +83,13 @@ const BiodataTemplate = () => {
                   <Button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDownload(template.id);
+                      setSelectedTemplate(template.id);
+                      setTimeout(() => handleDownload(template.id), 100);
                     }}
                     className="w-full bg-blue-600 hover:bg-blue-700"
                   >
                     <Download className="mr-2 h-4 w-4" />
-                    Download Template {template.id}
+                    Download
                   </Button>
                 </div>
               </div>
@@ -91,7 +114,7 @@ const BiodataTemplate = () => {
           <div 
             key={template.id}
             id={`template-${template.id}`}
-            className={`${selectedTemplate === template.id ? 'block' : 'hidden'}`}
+            className={`${selectedTemplate === template.id ? 'block' : 'hidden'} pdf-template`}
           >
             {template.component}
           </div>

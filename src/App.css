@@ -64,3 +64,13 @@
     @apply bg-background text-foreground;
   }
 }
+/* Add this to your global CSS file */
+@media print {
+  .pdf-template {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+  }
+}
+  
