@@ -73,6 +73,24 @@ const BiodataForm = () => {
     const [tempLabel, setTempLabel] = useState<string>('');
     const navigate = useNavigate();
 
+const rashiOptions = [
+  "mesh (aries)", "varishabna (taurus)", "mithuna (gemini)", "karka (cancer)",
+  "simha (leo)", "kanya (virgo)", "tula (libra)", "vrischika (scorpio)",
+  "dhanur (sagittarius)", "makara (capricorn)", "kumbha (aquarius)", "meena (pisces)"
+];
+
+const complexionOptions = [
+  "very fair", "fair", "medium", "brown", "dark"
+];
+
+// Generate height options from 3' 0" to 8' 0"
+const heightOptions = [];
+for (let ft = 3; ft <= 8; ft++) {
+  for (let inch = 0; inch <= 11; inch++) {
+    heightOptions.push(`${ft}' ${inch}"`);
+    if (ft === 8 && inch === 0) break; // Stop at 8' 0"
+  }
+}
 
         // Updated handleLabelChange with validation
         const handleLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string,e?: React.MouseEvent | React.KeyboardEvent) => {
@@ -408,6 +426,7 @@ const BiodataForm = () => {
                                                                                         </Label>
                                                                                         <Button
                                                                                             variant="ghost"
+                                                                                            type="button"
                                                                                             size="sm"
                                                                                             onClick={() => startEditingLabel(section, fieldKey)}
                                                                                             className="h-6 px-2"
@@ -416,8 +435,7 @@ const BiodataForm = () => {
                                                                                         </Button>
                                                                                     </div>
                                                                                 )}
-                                                                                {/* Date Picker Integration */}
-                                                                                {fieldKey === 'dateOfBirth' ? (
+   {fieldKey === 'dateOfBirth' ? (
   <DatePicker
     selected={config.value ? new Date(config.value) : null}
     onChange={(date: Date | null) => handleDateChange(date, section, fieldKey)}
@@ -425,18 +443,49 @@ const BiodataForm = () => {
     className="w-full border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300"
     placeholderText="Select date of birth"
   />
-) : fieldKey === 'timeOfBirth' ? ( 
-<TimePicker
-  value={config.value || ''}
-  onChange={(time: string | null) => handleTimeChange(time, section, fieldKey)}
-  className="w-100 border-gray-200 rounded-md"
-  format="HH:mm:ss a" // Format with seconds
-  disableClock={false}
-//   clearIcon={null}
-  required={false}
-//   amPmAriaLabel={"Select AM/PM"}
-  maxDetail={"second"} // Enable seconds selection
-/>
+) : fieldKey === 'timeOfBirth' ? (
+  <TimePicker
+    value={config.value || ''}
+    onChange={(time: string | null) => handleTimeChange(time, section, fieldKey)}
+    className="w-100 border-gray-200 rounded-md"
+    format="HH:mm:ss a"
+    disableClock={false}
+    required={false}
+    maxDetail={"second"}
+  />
+) : fieldKey === 'rashi' ? (
+  <select
+    value={config.value || ''}
+    onChange={e => handleInputChange(section, fieldKey, e.target.value)}
+    className="w-full border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300"
+  >
+    <option value="">Select Rashi</option>
+    {rashiOptions.map(opt => (
+      <option key={opt} value={opt}>{opt}</option>
+    ))}
+  </select>
+) : fieldKey === 'complexion' ? (
+  <select
+    value={config.value || ''}
+    onChange={e => handleInputChange(section, fieldKey, e.target.value)}
+    className="w-full border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300"
+  >
+    <option value="">Select Complexion</option>
+    {complexionOptions.map(opt => (
+      <option key={opt} value={opt}>{opt}</option>
+    ))}
+  </select>
+) : fieldKey === 'height' ? (
+  <select
+    value={config.value || ''}
+    onChange={e => handleInputChange(section, fieldKey, e.target.value)}
+    className="w-full border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300"
+  >
+    <option value="">Select Height</option>
+    {heightOptions.map(opt => (
+      <option key={opt} value={opt}>{opt}</option>
+    ))}
+  </select>
 ) : (
   <Input
     value={config?.value}

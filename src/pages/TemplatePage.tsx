@@ -5,6 +5,7 @@ import { Download, LayoutGrid } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Template1 from './Template1';
+import preview1 from "../assets/template1Preview.png"
 
 const BiodataTemplate = () => {
   const location = useLocation();
@@ -13,7 +14,7 @@ const BiodataTemplate = () => {
   const [showTemplateGallery, setShowTemplateGallery] = useState(true);
 
   const templates = [
-    { id: 1, component: <Template1 formData={formData} />, preview: '/template1-preview.jpg' },
+    { id: 1, component: <Template1 formData={formData} />, preview: preview1 },
   ];
 
   const handleDownload = async (templateId: number) => {
@@ -73,7 +74,7 @@ const BiodataTemplate = () => {
                 <img
                   src={template.preview}
                   alt={`Template ${template.id}`}
-                  className="w-full h-64 object-cover cursor-pointer"
+                  className="w-full h-64 object-contain cursor-pointer"
                   onClick={() => {
                     setSelectedTemplate(template.id);
                     setShowTemplateGallery(false);
@@ -81,16 +82,16 @@ const BiodataTemplate = () => {
                 />
                 <div className="p-4">
                   <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedTemplate(template.id);
-                      setTimeout(() => handleDownload(template.id), 100);
-                    }}
-                    className="w-full bg-blue-600 hover:bg-blue-700"
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download
-                  </Button>
+  onClick={(e) => {
+    e.stopPropagation();
+    setSelectedTemplate(template.id);
+    setShowTemplateGallery(false); // <-- Add this line to show the template!
+  }}
+  className="w-full text-white bg-blue-600 hover:bg-blue-700"
+>
+  View Template
+</Button>
+
                 </div>
               </div>
             ))}
@@ -105,7 +106,7 @@ const BiodataTemplate = () => {
       <div className="max-w-6xl mx-auto">
         <Button
           onClick={() => setShowTemplateGallery(true)}
-          className="mb-6 bg-gray-800 hover:bg-gray-700"
+          className="mb-6 text-white bg-gray-800 hover:bg-gray-700"
         >
           ← Back to Templates
         </Button>
@@ -123,7 +124,7 @@ const BiodataTemplate = () => {
         <div className="mt-6">
           <Button 
             onClick={() => selectedTemplate && handleDownload(selectedTemplate)}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-blue-600 text-white hover:bg-blue-700"
           >
             <Download className="mr-2 h-4 w-4" />
             Download Current Template
