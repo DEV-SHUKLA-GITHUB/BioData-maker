@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Plus, User, Users, PhoneCall, Camera, ChevronDown, ArrowUp,ArrowDown,ChevronUp, GripVertical, X, Save, Edit2 } from 'lucide-react';
+import { Plus, User, Users, PhoneCall, Camera, ChevronDown, ArrowUp,ArrowDown,ChevronUp, X, Save, Edit2 } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import TimePicker from 'react-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -84,13 +84,14 @@ const complexionOptions = [
 ];
 
 // Generate height options from 3' 0" to 8' 0"
-const heightOptions = [];
+const heightOptions: string[] = [];
 for (let ft = 3; ft <= 8; ft++) {
   for (let inch = 0; inch <= 11; inch++) {
     heightOptions.push(`${ft}' ${inch}"`);
     if (ft === 8 && inch === 0) break; // Stop at 8' 0"
   }
 }
+
 
         // Updated handleLabelChange with validation
         const handleLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string,e?: React.MouseEvent | React.KeyboardEvent) => {
