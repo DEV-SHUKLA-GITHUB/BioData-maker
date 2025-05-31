@@ -11,6 +11,8 @@ interface FormData {
 interface Template1Props {
   formData: FormData;
 }
+
+// Helper: Add space before each capital letter (except the first)
 function addSpaceBeforeCapitals(str: string): string {
   return str.replace(/([A-Z])/g, ' $1').replace(/^ /, '');
 }
@@ -19,19 +21,22 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
   const PersonalDetails = formData?.PersonalDetails || {};
   const FamilyDetails = formData?.FamilyDetails || {};
   const ContactDetails = formData?.ContactDetails || {};
-const localDataRaw = localStorage.getItem('biodataForm');
-const localData = localDataRaw ? JSON.parse(localDataRaw) : undefined;
-const localImage = localData?.imagePreview;
+
+  // Parse biodataForm from localStorage
+  const localDataRaw = localStorage.getItem('biodataForm');
+  const localData = localDataRaw ? JSON.parse(localDataRaw) : undefined;
+  const localImage = localData?.imagePreview;
 
   // Filter out unwanted fields from personal details
   const personalEntries = Object.entries(PersonalDetails)
-    .filter(([key]) => !['Name', 'DateofBirth', 'PlaceofBirth'].includes(key))
-    .filter(([value]) => value && value.trim() !== '');
+    .filter(([key, value]) => 
+      !['Name', 'DateofBirth', 'PlaceofBirth'].includes(key) && value && value.trim() !== ''
+    );
 
   const familyEntries = Object.entries(FamilyDetails)
-    .filter(([ value]) => value && value.trim() !== '');
+    .filter(([key, value]) => value && value.trim() !== '');
   const contactEntries = Object.entries(ContactDetails)
-    .filter(([ value]) => value && value.trim() !== '');
+    .filter(([key, value]) => value && value.trim() !== '');
 
   // Merge all entries into one array with section labels
   const allItems: [string, string, string][] = [
@@ -39,6 +44,7 @@ const localImage = localData?.imagePreview;
     ...familyEntries.map(([key, value]) => [key, value, 'FAMILY DETAILS'] as [string, string, string]),
     ...contactEntries.map(([key, value]) => [key, value, 'CONTACT DETAILS'] as [string, string, string])
   ];
+
   // Single Page component
   const Page = ({
     items,
@@ -47,7 +53,6 @@ const localImage = localData?.imagePreview;
     items: [string, string, string][];
     showHeader?: boolean;
   }) => {
-    // You may adjust this threshold for your needs
     const LINE_WRAP_THRESHOLD = 40;
 
     return (
@@ -100,16 +105,15 @@ const localImage = localData?.imagePreview;
               {/* Profile Image */}
               {(formData?.image || localImage) && (
                 <div className="w-32 h-32 overflow-hidden rounded-full shadow-lg border-4 border-white flex-shrink-0">
-<img
-  src={
-    formData.image
-      ? URL.createObjectURL(formData.image)
-      : localImage || ""
-  }
-  alt="Profile"
-  className="w-full h-full object-cover"
-/>
-
+                  <img
+                    src={
+                      formData.image
+                        ? URL.createObjectURL(formData.image)
+                        : localImage || ""
+                    }
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               )}
               {/* Name and Basic Info */}
@@ -137,6 +141,8 @@ const localImage = localData?.imagePreview;
           <div className="space-y-3">
             {items.map((item, index) => {
               const [key, value, section] = item;
+              if (!value || value.trim() === "") return null; // Only render if value exists
+
               const isNewSection = index === 0 || items[index - 1][2] !== section;
               const isMultiLine = value.length > LINE_WRAP_THRESHOLD;
 
@@ -158,18 +164,15 @@ const localImage = localData?.imagePreview;
                     }}
                   >
                     <span
-  className="font-semibold w-1/4 text-black text-base mr-4 flex-shrink-0"
-  style={{ lineHeight: isMultiLine ? '1.5' : '.1rem' }}
->
-  {addSpaceBeforeCapitals(key)}:
-</span>
-
+                      className="font-semibold w-1/4 text-black text-base mr-4 flex-shrink-0"
+                      style={{ lineHeight: isMultiLine ? '1.5' : '.1rem' }}
+                    >
+                      {addSpaceBeforeCapitals(key)}:
+                    </span>
                     <span
                       className="text-black w-1/2 text-base text-start"
                       style={{
                         lineHeight: isMultiLine ? '1.2' : '.1rem',
-                        // wordBreak: 'break-word',
-                        // whiteSpace: 'pre-line',
                       }}
                     >
                       {value}
