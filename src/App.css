@@ -73,4 +73,20 @@
     padding: 0;
   }
 }
-  
+  /* Remove default TimePicker borders */
+.react-time-picker__wrapper {
+  border: none !important;
+}
+
+.react-time-picker__inputGroup {
+  border: none !important;
+}
+
+.react-time-picker__inputGroup__input {
+  border: none !important;
+  outline: none !important;
+}
+
+.react-time-picker__inputGroup__divider {
+  color: #6b7280;
+}
