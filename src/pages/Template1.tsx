@@ -34,9 +34,9 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
     );
 
   const familyEntries = Object.entries(FamilyDetails)
-    .filter(([key, value]) => value && value.trim() !== '');
+    .filter(([ value]) => value && value.trim() !== '');
   const contactEntries = Object.entries(ContactDetails)
-    .filter(([key, value]) => value && value.trim() !== '');
+    .filter(([value]) => value && value.trim() !== '');
 
   // Merge all entries into one array with section labels
   const allItems: [string, string, string][] = [
