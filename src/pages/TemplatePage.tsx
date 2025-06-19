@@ -5,8 +5,8 @@
   import html2canvas from 'html2canvas';
   import jsPDF from 'jspdf';
   import Template1 from './Template1';
-  // import Template2 from './Template2';
-  // import Template3 from './Template3';
+  import Template2 from './Template2';
+  import Template3 from './Template3';
   import preview1 from "../assets/template1Preview.png"
 
   const BiodataTemplate = () => {
@@ -17,8 +17,8 @@
 
     const templates = [
       { id: 1, component: <Template1 formData={formData} />, preview: preview1 },
-      // { id: 2, component: <Template2 formData={formData} />, preview: preview1 },
-      // { id: 3, component: <Template3 formData={formData} />, preview: preview1 },
+      { id: 2, component: <Template2 formData={formData} />, preview: preview1 },
+      { id: 3, component: <Template3 formData={formData} />, preview: preview1 },
     ];
 
     const handleDownload = async (templateId: number) => {

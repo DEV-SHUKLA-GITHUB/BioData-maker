@@ -54,7 +54,7 @@ const initialFormData: FormDataWithLabels = {
         fatherOccupation: { label: 'Father\'s Occupation', value: '' },
         motherName: { label: 'Mother\'s Name', value: '' },
         motherOccupation: { label: 'Mother\'s Occupation', value: '' },
-        siblings: { label: 'Siblings', value: '' }
+        siblingsName: { label: 'Siblings Name', value: '' }
     },
     ContactDetails: {
         ContactNumber: { label: 'Contact Number', value: '' },
@@ -481,15 +481,16 @@ useEffect(() => {
     />
 )
 : fieldKey === 'timeOfBirth' ? (
-     <input
-        type="time"
-        step="1"
-        value={config.value || ''}
-        onChange={(e) => handleInputChange(section, fieldKey, e.target.value)}
-        onFocus={(e) => e.target.showPicker && e.target.showPicker()}
-        className="w-full border border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300 focus:outline-none"
-        placeholder="Select time of birth"
-    />
+<input
+    type="time"
+    step="any"
+    value={config.value ? config.value.substring(0, 5) : ''}
+    onChange={(e) => handleInputChange(section, fieldKey, e.target.value)}
+    onFocus={(e) => e.target.showPicker && e.target.showPicker()}
+    className="w-full border border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300 focus:outline-none"
+    placeholder="Select time of birth"
+/>
+
 ) : 
 fieldKey === 'rashi' ? (
                                                                                     <select
