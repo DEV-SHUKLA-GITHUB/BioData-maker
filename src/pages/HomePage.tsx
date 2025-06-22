@@ -37,7 +37,7 @@ const HeroSection = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 3 }}
     >
-      <div className="flex flex-col items-start">
+      <div className="hidden lg:flex flex-col items-start">
         <motion.div className="mb-4" {...tiltAnimation}>
           <img src={img1} alt="Image 1" className="w-32 h-48 object-cover rounded-lg shadow-lg" />
         </motion.div>
@@ -78,7 +78,7 @@ const HeroSection = () => {
         </motion.button>
       </motion.div>
 
-      <div className="flex flex-col items-end">
+      <div className="lg:flex flex-col hidden items-end">
         <motion.div className="mb-4" {...tiltAnimation}>
           <img src={img3} alt="Image 3" className="w-32 h-48 object-cover rounded-lg shadow-lg" />
         </motion.div>
