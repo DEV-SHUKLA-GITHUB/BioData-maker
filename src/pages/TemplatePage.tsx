@@ -1,4 +1,4 @@
-  import { useState } from 'react';
+  import { useState,useEffect } from 'react';
   import { useLocation } from 'react-router-dom';
   import { Button } from '../components/ui/button';
   import { Download, LayoutGrid } from 'lucide-react';
@@ -7,18 +7,34 @@
   import Template1 from './Template1';
   import Template2 from './Template2';
   import Template3 from './Template3';
+  import Template4 from './Template4';
+  import Template5 from './Template5';
+  import Template6 from './Template6';
+  import Template7 from './Template7';
   import preview1 from "../assets/template1Preview.png"
+  import preview2 from "../assets/template2Preview.png"
+  import preview3 from "../assets/template3Preview.png"
+  import preview4 from "../assets/template4Preview.png"
+  import preview5 from "../assets/template5Preview.png"
+  import preview6 from "../assets/template6Preview.png"
+  import preview7 from "../assets/template7Preview.png"
 
   const BiodataTemplate = () => {
     const location = useLocation();
     const { formData } = location.state as { formData: any };
     const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
     const [showTemplateGallery, setShowTemplateGallery] = useState(true);
-
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
     const templates = [
-      { id: 1, component: <Template1 formData={formData} />, preview: preview1 },
-      { id: 2, component: <Template2 formData={formData} />, preview: preview1 },
-      { id: 3, component: <Template3 formData={formData} />, preview: preview1 },
+      { id: 1, component: <Template3 formData={formData} />, preview: preview1 },
+      { id: 2, component: <Template7 formData={formData} />, preview: preview7 },
+      { id: 3, component: <Template4 formData={formData} />, preview: preview4 },
+      { id: 4, component: <Template6 formData={formData} />, preview: preview6 },
+      { id: 5, component: <Template5 formData={formData} />, preview: preview5 },
+      { id: 6, component: <Template1 formData={formData} />, preview: preview2 },
+      { id: 7, component: <Template2 formData={formData} />, preview: preview3 },
     ];
 
     const handleDownload = async (templateId: number) => {

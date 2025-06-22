@@ -80,7 +80,6 @@ const BiodataForm = () => {
     const [tempLabel, setTempLabel] = useState<string>('');
     const labelInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
-
     const rashiOptions = [
         "mesh (aries)", "varishabna (taurus)", "mithuna (gemini)", "karka (cancer)",
         "simha (leo)", "kanya (virgo)", "tula (libra)", "vrischika (scorpio)",
@@ -121,7 +120,7 @@ useEffect(() => {
             const parsed = JSON.parse(saved);
             if (parsed.formData) setFormData(parsed.formData);
             if (parsed.fieldOrder) setFieldOrder(parsed.fieldOrder);
-            if (parsed.imagePreview) setImagePreview(parsed.imagePreview);
+            // if (parsed.imagePreview) setImagePreview(parsed.imagePreview);
             // Note: You cannot restore the File object, so image upload will need to be re-done if needed.
         } catch (e) {
             // If error, ignore and use defaults
@@ -341,7 +340,10 @@ useEffect(() => {
                         <motion.div className="flex flex-col items-center space-y-4">
                             <div className="relative w-28 h-28 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 hover:border-pink-300 transition-all">
                                 {imagePreview ? (
-                                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                         {/* <Camera className="w-8 h-8 text-gray-400" /> */}
+                                    </div>
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center">
                                         <Camera className="w-8 h-8 text-gray-400" />
