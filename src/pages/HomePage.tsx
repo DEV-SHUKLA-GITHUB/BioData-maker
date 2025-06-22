@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import { Heart, FileText, Download, Paintbrush,HelpCircle } from 'lucide-react';
 // import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import img1 from '../assets/1.jpg'
-import img2 from '../assets/2.jpg'
-import img3 from '../assets/3.jpg'
-import img4 from '../assets/4.jpg'
-import img5 from '../assets/5.jpg'
+import img1 from '../assets/template1Preview.png'
+import img2 from '../assets/template2Preview.png'
+import img3 from '../assets/template7Preview.png'
+import img4 from '../assets/template4Preview.png'
+import img5 from '../assets/template5Preview.png'
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 // Animation variants
 const fadeIn = {
