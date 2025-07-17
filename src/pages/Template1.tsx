@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import bg from "../assets/bg1.jpg";
 
 interface FormData {
@@ -11,6 +12,49 @@ interface FormData {
 interface Template1Props {
   formData: FormData;
 }
+
+// SEO Component for Template1
+const Template1SEO = ({ formData }: { formData: FormData }) => {
+  const personName = formData?.PersonalDetails?.Name || "Professional";
+  
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": personName,
+    "description": `Marriage biodata for ${personName} - Professional matrimonial profile`,
+    "image": formData?.image ? URL.createObjectURL(formData.image) : undefined,
+    "birthDate": formData?.PersonalDetails?.DateofBirth,
+    "birthPlace": formData?.PersonalDetails?.PlaceofBirth,
+    "jobTitle": formData?.PersonalDetails?.Occupation,
+    "alumniOf": formData?.PersonalDetails?.Education,
+    "height": formData?.PersonalDetails?.Height,
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": formData?.ContactDetails?.ContactNumber,
+      "email": formData?.ContactDetails?.EmailId,
+      "contactType": "personal"
+    }
+  };
+
+  return (
+    <Helmet>
+      <title>Royal Classic Biodata Template - {personName} Marriage Profile</title>
+      <meta 
+        name="description" 
+        content={`Professional marriage biodata for ${personName} using Royal Classic template. Luxurious design with royal elements and gold accents.`}
+      />
+      <meta 
+        name="keywords" 
+        content={`${personName}, marriage biodata, matrimonial profile, royal classic template, luxury biodata design`}
+      />
+      <meta name="robots" content="noindex, nofollow" />
+      
+      <script type="application/ld+json">
+        {JSON.stringify(schemaData)}
+      </script>
+    </Helmet>
+  );
+};
 
 // Helper: Add space before each capital letter (except the first)
 function addSpaceBeforeCapitals(str: string): string {
@@ -34,9 +78,9 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
     );
 
   const familyEntries = Object.entries(FamilyDetails)
-    .filter(([ value]) => value && value.trim() !== '');
+    .filter(([, value]) => value && value.trim() !== '');
   const contactEntries = Object.entries(ContactDetails)
-    .filter(([value]) => value && value.trim() !== '');
+    .filter(([, value]) => value && value.trim() !== '');
 
   // Merge all entries into one array with section labels
   const allItems: [string, string, string][] = [
@@ -56,19 +100,24 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
     const LINE_WRAP_THRESHOLD = 40;
 
     return (
-      <div className="relative rounded-lg template-container" style={{
-        width: '100%',
-        minHeight: '100vh',
-        aspectRatio: '0.7',
-        padding: '0',
-        maxWidth: '1000px',
-        margin: '0 auto',
-        position: 'relative',
-        color: 'black',
-        backgroundColor: '#ffffff',
-        border: '1px solid #ddd',
-        overflow: 'hidden'
-      }}>
+      <div 
+        className="relative rounded-lg template-container" 
+        style={{
+          width: '100%',
+          minHeight: '100vh',
+          aspectRatio: '0.7',
+          padding: '0',
+          maxWidth: '1000px',
+          margin: '0 auto',
+          position: 'relative',
+          color: 'black',
+          backgroundColor: '#ffffff',
+          border: '1px solid #ddd',
+          overflow: 'hidden'
+        }}
+        role="document"
+        aria-label="Marriage biodata template"
+      >
         {/* Background image */}
         <div
           style={{
@@ -83,6 +132,7 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
             backgroundRepeat: 'no-repeat',
             zIndex: 1
           }}
+          aria-hidden="true"
         />
 
         {/* Content overlay */}
@@ -101,7 +151,7 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
 
           {/* Header Section */}
           {showHeader && (
-            <div className="flex flex-row items-center gap-8 mb-8 mt-40 rounded-lg p-6 shadow-lg backdrop-blur-sm">
+            <header className="flex flex-row items-center gap-8 mb-8 mt-40 rounded-lg p-6 shadow-lg backdrop-blur-sm">
               {/* Profile Image */}
               {(formData?.image || localImage) && (
                 <div className="w-32 h-32 overflow-hidden rounded-full shadow-lg border-4 border-white flex-shrink-0">
@@ -111,7 +161,7 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
                         ? URL.createObjectURL(formData.image)
                         : localImage || ""
                     }
-                    alt="Profile"
+                    alt={`Profile photo of ${PersonalDetails?.Name || 'Individual'}`}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -125,7 +175,8 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
                 )}
                 {PersonalDetails?.DateofBirth && PersonalDetails.DateofBirth.trim() !== '' && (
                   <p className="text-lg mb-1 text-gray-700">
-                    <span className="font-semibold">Date of Birth:</span> {PersonalDetails.DateofBirth}
+                    <span className="font-semibold">Date of Birth:</span> 
+                    <time dateTime={PersonalDetails.DateofBirth}>{PersonalDetails.DateofBirth}</time>
                   </p>
                 )}
                 {PersonalDetails?.PlaceofBirth && PersonalDetails.PlaceofBirth.trim() !== '' && (
@@ -134,14 +185,14 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
                   </p>
                 )}
               </div>
-            </div>
+            </header>
           )}
 
           {/* Data Layout */}
-          <div className="space-y-3">
+          <main className="space-y-3">
             {items.map((item, index) => {
               const [key, value, section] = item;
-              if (!value || value.trim() === "") return null; // Only render if value exists
+              if (!value || value.trim() === "") return null;
 
               const isNewSection = index === 0 || items[index - 1][2] !== section;
               const isMultiLine = value.length > LINE_WRAP_THRESHOLD;
@@ -151,9 +202,9 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
                   {/* Section Header */}
                   {isNewSection && (
                     <div className="mb-4 mt-6">
-                      <div className="inline-block px-6 py-2 rounded-full bg-amber-500 pb-5 text-white font-semibold text-sm shadow-lg">
+                      <h2 className="inline-block px-6 py-2 rounded-full bg-amber-500 pb-5 text-white font-semibold text-sm shadow-lg">
                         {section}
-                      </div>
+                      </h2>
                     </div>
                   )}
                   {/* Data Row */}
@@ -163,25 +214,25 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
                       lineHeight: isMultiLine ? '1.5' : '.1rem',
                     }}
                   >
-                    <span
+                    <dt
                       className="font-semibold w-1/4 text-black text-base mr-4 flex-shrink-0"
                       style={{ lineHeight: isMultiLine ? '1.5' : '.1rem' }}
                     >
                       {addSpaceBeforeCapitals(key)}:
-                    </span>
-                    <span
+                    </dt>
+                    <dd
                       className="text-black w-1/2 text-base text-start"
                       style={{
                         lineHeight: isMultiLine ? '1.2' : '.1rem',
                       }}
                     >
                       {value}
-                    </span>
+                    </dd>
                   </div>
                 </div>
               );
             })}
-          </div>
+          </main>
 
           {/* Page Number */}
           <div className="absolute bottom-4 right-4 bg-white/90 px-3 py-1 rounded-full text-xs text-gray-600 shadow-md">
@@ -193,10 +244,10 @@ const Template1: React.FC<Template1Props> = ({ formData }) => {
   };
 
   return (
-    <div>
-      {/* Single Page with all details */}
+    <article className="biodata-template">
+      <Template1SEO formData={formData} />
       <Page items={allItems} showHeader={true} />
-    </div>
+    </article>
   );
 };
 

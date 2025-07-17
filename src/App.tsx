@@ -1,31 +1,28 @@
-// import React from 'react';
+// App.tsx - Updated with better code splitting
+import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Template1 from './pages/TemplatePage';
-import BiodataForm from './pages/BiodataMaker';
-import Homepage from './pages/HomePage';
+import ErrorBoundary from './components/ErrorBoundary';
+import LoadingSpinner from './components/LoadingSpinner';
+
+// Lazy load components
+const Homepage = lazy(() => import('./pages/HomePage'));
+const BiodataForm = lazy(() => import('./pages/BiodataMaker'));
+const TemplatePage = lazy(() => import('./pages/TemplatePage'));
 
 const App = () => {
   return (
-    <Router>
-      {/* <nav>
-        <ul>
-          <li>
-            <Link to="/">Biodata Maker</Link>
-          </li>
-          <li>
-            <Link to="/template1">Template 1</Link>
-          </li>
-        </ul>
-      </nav> */}
-
-      <Routes>
-
-        <Route path="/" element={<Homepage />} /> 
-        <Route path="/biodata" element={<BiodataForm />} /> 
-        <Route path="/template" element={<Template1 />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/create-biodata" element={<BiodataForm />} />
+            <Route path="/templates" element={<TemplatePage />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    </ErrorBoundary>
   );
-}
+};
 
 export default App;
