@@ -12,7 +12,7 @@ import img2 from '../assets/template2Preview.png';
 import img3 from '../assets/template7Preview.png';
 // import img4 from '../assets/template4Preview.png';
 import img5 from '../assets/template5Preview.png';
-
+import logo from "../assets/logo.png"
 // Preload critical images
 const preloadImages = [img1, img2, img3];
 
@@ -55,18 +55,17 @@ const OptimizedImage: React.FC<{
       {!imageLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse rounded"></div>
       )}
-      
+
       <img
         src={src}
         alt={alt}
         loading={loading}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${
-          imageLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         onLoad={handleLoad}
         onError={handleError}
       />
-      
+
       {imageError && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500 text-sm">
           Failed to load image
@@ -83,7 +82,7 @@ const HomepageSEO: React.FC = () => {
     "@type": "WebApplication",
     "name": "Marriage Biodata Maker",
     "description": "Create beautiful marriage biodata with professional templates. Easy to use, customizable, and instant download.",
-    "url": "https://yourdomain.com",
+    "url": "https://www.freebiodatagenerator.com",
     "applicationCategory": "UtilityApplication",
     "operatingSystem": "Web Browser",
     "offers": {
@@ -94,7 +93,7 @@ const HomepageSEO: React.FC = () => {
     "creator": {
       "@type": "Organization",
       "name": "Marriage Biodata Maker",
-      "url": "https://yourdomain.com"
+      "url": "https://www.freebiodatagenerator.com"
     },
     "featureList": [
       "Professional biodata templates",
@@ -103,47 +102,47 @@ const HomepageSEO: React.FC = () => {
       "Mobile responsive design",
       "Customizable fields"
     ],
-    "screenshot": "https://yourdomain.com/screenshot.jpg"
+    "screenshot": "https://www.freebiodatagenerator.com/screenshot.jpg"
   };
 
   return (
     <Helmet>
       <title>Marriage Biodata Maker - Create Beautiful Biodata Templates Online</title>
-      <meta 
-        name="description" 
-        content="Create professional marriage biodata with beautiful templates. Easy to use, customizable designs, and instant download. Perfect for matrimonial profiles." 
+      <meta
+        name="description"
+        content="Create professional marriage biodata with beautiful templates. Easy to use, customizable designs, and instant download. Perfect for matrimonial profiles."
       />
-      <meta 
-        name="keywords" 
-        content="marriage biodata, matrimonial profile, biodata maker, marriage resume, wedding biodata, biodata templates, Indian marriage biodata" 
+      <meta
+        name="keywords"
+        content="marriage biodata, matrimonial profile, biodata maker, marriage resume, wedding biodata, biodata templates, Indian marriage biodata"
       />
-      <link rel="canonical" href="https://yourdomain.com" />
-      
+      <link rel="canonical" href="https://www.freebiodatagenerator.com" />
+
       {/* Preload critical resources */}
       {preloadImages.map((src, index) => (
         <link key={index} rel="preload" as="image" href={src} />
       ))}
-      
+
       {/* Open Graph Tags */}
       <meta property="og:title" content="Marriage Biodata Maker - Create Beautiful Biodata Templates" />
       <meta property="og:description" content="Create professional marriage biodata with beautiful templates. Easy to use and instant download." />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://yourdomain.com" />
-      <meta property="og:image" content="https://yourdomain.com/og-image.jpg" />
+      <meta property="og:url" content="https://www.freebiodatagenerator.com" />
+      <meta property="og:image" content="https://www.freebiodatagenerator.com/og-image.jpg" />
       <meta property="og:site_name" content="Marriage Biodata Maker" />
-      
+
       {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="Marriage Biodata Maker - Create Beautiful Biodata Templates" />
       <meta name="twitter:description" content="Create professional marriage biodata with beautiful templates" />
-      <meta name="twitter:image" content="https://yourdomain.com/twitter-image.jpg" />
-      
+      <meta name="twitter:image" content="https://www.freebiodatagenerator.com/twitter-image.jpg" />
+
       {/* Additional SEO Tags */}
       <meta name="robots" content="index, follow" />
       <meta name="author" content="Marriage Biodata Maker" />
       <meta name="language" content="en" />
       <meta name="revisit-after" content="7 days" />
-      
+
       {/* Structured Data */}
       <script type="application/ld+json">
         {JSON.stringify(schemaData)}
@@ -169,7 +168,7 @@ const HeroSection: React.FC = () => {
   //   navigate('/templates');
   // }, [navigate]);
 
-  return ( <>
+  return (<>
     <section className="relative bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 text-white overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10" aria-hidden="true">
@@ -189,9 +188,10 @@ const HeroSection: React.FC = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-6"
+              className="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-6"
             >
-              <Heart className="w-8 h-8 text-white" />
+              {/* <Heart className="w-8 h-8 text-white" /> */}
+              <img src={logo} className="w-50 text-white"  alt='logo'/>
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
@@ -200,7 +200,7 @@ const HeroSection: React.FC = () => {
             </h1>
 
             <p className="text-xl md:text-2xl mb-8 text-white/90 ">
-              Craft your story with elegance and style using our professional templates. 
+              Craft your story with elegance and style using our professional templates.
               Trusted by thousands of families worldwide.
             </p>
 
@@ -214,7 +214,7 @@ const HeroSection: React.FC = () => {
                 Get Started Free
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
-              
+
               {/* <motion.button
                 onClick={handleViewTemplates}
                 whileHover={{ scale: 1.05 }}
@@ -303,26 +303,26 @@ const TemplateExamples: React.FC = () => {
   // const navigate = useNavigate();
 
   const templates = useMemo(() => [
-    { 
-      image: img1, 
+    {
+      image: img1,
       title: "Professional Classic",
       description: "Perfect for traditional families",
       category: "Professional"
     },
-    { 
-      image: img2, 
+    {
+      image: img2,
       title: "Modern Elegant",
       description: "Contemporary design with style",
       category: "Modern"
     },
-    { 
-      image: img3, 
+    {
+      image: img3,
       title: "Traditional Heritage",
       description: "Cultural elements and patterns",
       category: "Traditional"
     },
-    { 
-      image: img5, 
+    {
+      image: img5,
       title: "Minimalist Chic",
       description: "Clean and sophisticated",
       category: "Minimalist"
@@ -347,7 +347,7 @@ const TemplateExamples: React.FC = () => {
             Beautiful Marriage Biodata Templates
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Choose from our collection of professionally designed templates. 
+            Choose from our collection of professionally designed templates.
             Each template is crafted with attention to detail and cultural sensitivity.
           </p>
         </motion.div>
@@ -376,7 +376,7 @@ const TemplateExamples: React.FC = () => {
                   {template.category}
                 </div>
               </div>
-              
+
               <div className="p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">{template.title}</h3>
                 <p className="text-sm text-gray-600 mb-3">{template.description}</p>
@@ -398,21 +398,21 @@ const TemplateExamples: React.FC = () => {
 // Features Component
 const Features: React.FC = () => {
   const features = useMemo(() => [
-    { 
-      icon: FileText, 
-      title: "Easy Input", 
+    {
+      icon: FileText,
+      title: "Easy Input",
       description: "Simple forms to fill your matrimonial details quickly and efficiently",
       color: "bg-blue-500"
     },
-    { 
-      icon: Paintbrush, 
-      title: "Customizable Design", 
+    {
+      icon: Paintbrush,
+      title: "Customizable Design",
       description: "Personalize colors, fonts, and styles to match your preferences",
       color: "bg-purple-500"
     },
-    { 
-      icon: Download, 
-      title: "Instant Download", 
+    {
+      icon: Download,
+      title: "Instant Download",
       description: "Get your professional biodata in PDF format within seconds",
       color: "bg-green-500"
     }
@@ -432,7 +432,7 @@ const Features: React.FC = () => {
             Why Choose Our Marriage Biodata Maker
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Our platform combines ease of use with professional quality, 
+            Our platform combines ease of use with professional quality,
             making it the perfect choice for creating your matrimonial profile.
           </p>
         </motion.div>
@@ -537,7 +537,7 @@ const FAQs: React.FC = () => {
                   <ChevronDown className="w-5 h-5 text-gray-500" />
                 </motion.div>
               </button>
-              
+
               <AnimatePresence>
                 {openIndex === index && (
                   <motion.div
@@ -657,13 +657,13 @@ const Footer: React.FC = () => {
           <div className="flex justify-center mb-6">
             <Heart className="w-8 h-8 text-pink-500" />
           </div>
-          
+
           <h3 className="text-2xl font-bold mb-4">Marriage Biodata Maker</h3>
           <p className="text-gray-400 mb-6 max-w-md mx-auto">
-            Creating beautiful and professional marriage biodata has never been easier. 
+            Creating beautiful and professional marriage biodata has never been easier.
             Join thousands of happy families who trust our platform.
           </p>
-          
+
           <div className="flex justify-center space-x-6 mb-8">
             <a href="#" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Facebook">
               <FaFacebook size={24} />

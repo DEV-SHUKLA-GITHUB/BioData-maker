@@ -76,7 +76,7 @@ const BiodataFormSEO = () => {
         "@type": "WebPage",
         "name": "Create Marriage Biodata - Biodata Maker Form",
         "description": "Fill in your personal details to create a professional marriage biodata. Easy form with customizable fields for matrimonial profiles.",
-        "url": "https://yourdomain.com/create-biodata",
+        "url": "https://www.freebiodatagenerator.com/create-biodata",
         "breadcrumb": {
             "@type": "BreadcrumbList",
             "itemListElement": [
@@ -84,13 +84,13 @@ const BiodataFormSEO = () => {
                     "@type": "ListItem",
                     "position": 1,
                     "name": "Home",
-                    "item": "https://yourdomain.com"
+                    "item": "https://www.freebiodatagenerator.com"
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
                     "name": "Create Biodata",
-                    "item": "https://yourdomain.com/create-biodata"
+                    "item": "https://www.freebiodatagenerator.com/create-biodata"
                 }
             ]
         },
@@ -120,35 +120,35 @@ const BiodataFormSEO = () => {
     return (
         <Helmet>
             <title>Create Marriage Biodata - Professional Biodata Maker Form</title>
-            <meta 
-                name="description" 
-                content="Create your professional marriage biodata with our easy-to-use form. Fill personal details, family information, and contact details to generate a beautiful biodata." 
+            <meta
+                name="description"
+                content="Create your professional marriage biodata with our easy-to-use form. Fill personal details, family information, and contact details to generate a beautiful biodata."
             />
-            <meta 
-                name="keywords" 
-                content="create biodata, marriage biodata form, matrimonial profile, biodata maker, wedding biodata, personal details form" 
+            <meta
+                name="keywords"
+                content="create biodata, marriage biodata form, matrimonial profile, biodata maker, wedding biodata, personal details form"
             />
-            <link rel="canonical" href="https://yourdomain.com/create-biodata" />
-            
+            <link rel="canonical" href="https://www.freebiodatagenerator.com/create-biodata" />
+
             {/* Open Graph Tags */}
             <meta property="og:title" content="Create Marriage Biodata - Professional Biodata Maker Form" />
             <meta property="og:description" content="Create your professional marriage biodata with our easy-to-use form. Fill personal details and generate a beautiful biodata." />
             <meta property="og:type" content="website" />
-            <meta property="og:url" content="https://yourdomain.com/create-biodata" />
-            <meta property="og:image" content="https://yourdomain.com/biodata-form-preview.jpg" />
-            
+            <meta property="og:url" content="https://www.freebiodatagenerator.com/create-biodata" />
+            <meta property="og:image" content="https://www.freebiodatagenerator.com/biodata-form-preview.jpg" />
+
             {/* Twitter Card Tags */}
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content="Create Marriage Biodata - Professional Biodata Maker Form" />
             <meta name="twitter:description" content="Create your professional marriage biodata with our easy-to-use form" />
-            <meta name="twitter:image" content="https://yourdomain.com/biodata-form-preview.jpg" />
-            
+            <meta name="twitter:image" content="https://www.freebiodatagenerator.com/biodata-form-preview.jpg" />
+
             {/* Additional SEO Tags */}
             <meta name="robots" content="index, follow" />
             <meta name="author" content="Marriage Biodata Maker" />
             <meta name="language" content="en" />
             <meta name="revisit-after" content="7 days" />
-            
+
             {/* Structured Data */}
             <script type="application/ld+json">
                 {JSON.stringify(schemaData)}
@@ -160,7 +160,7 @@ const BiodataFormSEO = () => {
 // Breadcrumb Component for better navigation
 const Breadcrumb = () => {
     const navigate = useNavigate();
-    
+
     return (
         <nav aria-label="Breadcrumb navigation" className="mb-6">
             <ol className="flex items-center space-x-2 text-sm text-gray-600">
@@ -184,7 +184,7 @@ const Breadcrumb = () => {
 // Form Progress Indicator
 const FormProgress = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
     const progress = (currentStep / totalSteps) * 100;
-    
+
     return (
         <div className="mb-6">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
@@ -192,7 +192,7 @@ const FormProgress = ({ currentStep, totalSteps }: { currentStep: number; totalS
                 <span>{currentStep} of {totalSteps} sections</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
+                <div
                     className="bg-pink-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${progress}%` }}
                 />
@@ -271,7 +271,7 @@ const BiodataForm = () => {
     // Custom hook to detect outside click
     const useOutsideClick = (callback: () => void) => {
         const ref = useRef<HTMLDivElement>(null);
-        
+
         useEffect(() => {
             const handleClick = (event: MouseEvent) => {
                 if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -296,7 +296,7 @@ const BiodataForm = () => {
     // Save label changes
     const saveLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string) => {
         if (!newLabel.trim() || isMandatoryField(section, field)) return;
-        
+
         setFormData(prev => ({
             ...prev,
             [section]: {
@@ -337,11 +337,11 @@ const BiodataForm = () => {
 
     const handleDragEnd = (result: any, section: keyof FormDataWithLabels) => {
         if (!result.destination) return;
-        
+
         const items = Array.from(fieldOrder[section]);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
-        
+
         setFieldOrder(prev => ({
             ...prev,
             [section]: items
@@ -383,7 +383,7 @@ const BiodataForm = () => {
         if (isMandatoryField(section, field)) {
             return;
         }
-        
+
         setEditingLabel(`${section}-${field}`);
         setTempLabel(formData[section][field].label);
     };
@@ -416,19 +416,19 @@ const BiodataForm = () => {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
-            
+
             // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 alert('Please select an image smaller than 5MB');
                 return;
             }
-            
+
             // Validate file type
             if (!file.type.startsWith('image/')) {
                 alert('Please select a valid image file');
                 return;
             }
-            
+
             setImage(file);
             setImagePreview(URL.createObjectURL(file));
         }
@@ -436,7 +436,7 @@ const BiodataForm = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Validate required fields
         const requiredFields = ['name', 'dateOfBirth', 'ContactNumber'];
         const missingFields = requiredFields.filter(field => {
@@ -457,18 +457,18 @@ const BiodataForm = () => {
 
         const processedData = Object.entries(formData).reduce((acc, [sectionKey, fields]) => {
             const section = sectionKey as keyof FormDataWithLabels;
-            
+
             acc[section] = fieldOrder[section].reduce((fieldAcc, fieldKey) => {
                 const config = fields[fieldKey];
                 if (config) {
-                    fieldAcc[config.label.replace(/\s+/g, '')] = config.value;  
+                    fieldAcc[config.label.replace(/\s+/g, '')] = config.value;
                 }
                 return fieldAcc;
             }, {} as FormSection);
 
             return acc;
         }, {} as BiodataFormData);
-        
+
         if (image) {
             processedData.image = image;
         }
@@ -478,7 +478,7 @@ const BiodataForm = () => {
             fieldOrder,
             imagePreview
         };
-        console.log(dataToSave,"save")
+        console.log(dataToSave, "save")
         localStorage.setItem('biodataForm', JSON.stringify(dataToSave));
         navigate('/templates', { state: { formData: processedData } });
     };
@@ -508,11 +508,11 @@ const BiodataForm = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <BiodataFormSEO />
-            
+
             <motion.div initial="hidden" animate="visible" variants={containerVariants}>
                 <div className="max-w-2xl mx-auto">
                     <Breadcrumb />
-                    
+
                     <Card className="shadow-lg">
                         <CardHeader className="bg-gray-900 text-white rounded-t-lg">
                             <CardTitle className="text-xl font-semibold text-center">
@@ -522,20 +522,20 @@ const BiodataForm = () => {
                                 Fill in your details to generate a beautiful biodata template
                             </p>
                         </CardHeader>
-                        
+
                         <CardContent className="p-4">
                             <FormProgress currentStep={currentStep} totalSteps={3} />
-                            
+
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Profile Photo Section */}
                                 <section className="flex flex-col items-center space-y-4">
                                     <h3 className="text-lg font-medium text-gray-900">Profile Photo</h3>
                                     <div className="relative w-28 h-28 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 hover:border-pink-300 transition-all">
                                         {imagePreview ? (
-                                            <img 
-                                                src={imagePreview} 
-                                                alt="Profile photo preview" 
-                                                className="w-full h-full object-cover" 
+                                            <img
+                                                src={imagePreview}
+                                                alt="Profile photo preview"
+                                                className="w-full h-full object-cover"
                                             />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center">
@@ -543,17 +543,17 @@ const BiodataForm = () => {
                                             </div>
                                         )}
                                     </div>
-                                    <Label 
-                                        htmlFor="image" 
+                                    <Label
+                                        htmlFor="image"
                                         className="cursor-pointer bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
                                     >
                                         Upload Profile Photo
                                     </Label>
-                                    <Input 
-                                        id="image" 
-                                        type="file" 
-                                        accept="image/*" 
-                                        onChange={handleImageChange} 
+                                    <Input
+                                        id="image"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
                                         className="hidden"
                                         aria-label="Upload profile photo"
                                     />
@@ -597,19 +597,19 @@ const BiodataForm = () => {
                                             <DragDropContext onDragEnd={(result) => handleDragEnd(result, section)}>
                                                 <Droppable droppableId={section}>
                                                     {(provided) => (
-                                                        <div 
-                                                            {...provided.droppableProps} 
+                                                        <div
+                                                            {...provided.droppableProps}
                                                             ref={provided.innerRef}
                                                             className="space-y-3"
                                                         >
                                                             {fieldOrder[section].map((fieldKey, index) => {
                                                                 const config = formData[section][fieldKey];
                                                                 const isMandatory = isMandatoryField(section, fieldKey);
-                                                                
+
                                                                 return (
-                                                                    <Draggable 
-                                                                        key={fieldKey} 
-                                                                        draggableId={fieldKey} 
+                                                                    <Draggable
+                                                                        key={fieldKey}
+                                                                        draggableId={fieldKey}
                                                                         index={index}
                                                                     >
                                                                         {(provided) => (
@@ -619,15 +619,15 @@ const BiodataForm = () => {
                                                                                 className="bg-gray-50 rounded-lg p-3 shadow-sm"
                                                                             >
                                                                                 <div className="flex items-start space-x-2">
-                                                                                    <div 
+                                                                                    <div
                                                                                         {...provided.dragHandleProps}
                                                                                         className="pt-2.5 cursor-move text-gray-400 hover:text-gray-600"
                                                                                         aria-label="Drag to reorder field"
                                                                                     >
-                                                                                        <ArrowUp className="w-4 h-4"/>
-                                                                                        <ArrowDown className="w-4 h-4"/>
+                                                                                        <ArrowUp className="w-4 h-4" />
+                                                                                        <ArrowDown className="w-4 h-4" />
                                                                                     </div>
-                                                                                    
+
                                                                                     <div className="flex-1 space-y-2">
                                                                                         {editingLabel === `${section}-${fieldKey}` ? (
                                                                                             <div ref={outsideClickRef} className="flex space-x-2">

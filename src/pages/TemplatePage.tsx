@@ -30,24 +30,24 @@ interface TemplateData {
 }
 
 // SEO Component for Template Page
-const TemplatePageSEO = ({ 
-  selectedTemplate, 
-  templates 
-}: { 
+const TemplatePageSEO = ({
+  selectedTemplate,
+  templates
+}: {
   selectedTemplate: number | null;
   templates: TemplateData[];
 }) => {
   const currentTemplate = templates.find(t => t.id === selectedTemplate);
   const isGalleryView = selectedTemplate === null;
-  
+
   const schemaData = {
     "@context": "https://schema.org",
     "@type": isGalleryView ? "CollectionPage" : "WebPage",
     "name": isGalleryView ? "Marriage Biodata Templates Gallery" : `${currentTemplate?.name} - Biodata Template`,
-    "description": isGalleryView 
+    "description": isGalleryView
       ? "Choose from our collection of professional marriage biodata templates. Beautiful, customizable designs for your matrimonial profile."
       : `Preview and download the ${currentTemplate?.name} biodata template. ${currentTemplate?.description}`,
-    "url": isGalleryView ? "https://yourdomain.com/templates" : `https://yourdomain.com/templates/${currentTemplate?.id}`,
+    "url": isGalleryView ? "https://www.freebiodatagenerator.com/templates" : `https://www.freebiodatagenerator.com/templates/${currentTemplate?.id}`,
     "breadcrumb": {
       "@type": "BreadcrumbList",
       "itemListElement": [
@@ -55,19 +55,19 @@ const TemplatePageSEO = ({
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://yourdomain.com"
+          "item": "https://www.freebiodatagenerator.com"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "Create Biodata",
-          "item": "https://yourdomain.com/create-biodata"
+          "item": "https://www.freebiodatagenerator.com/create-biodata"
         },
         {
           "@type": "ListItem",
           "position": 3,
           "name": isGalleryView ? "Templates Gallery" : currentTemplate?.name,
-          "item": isGalleryView ? "https://yourdomain.com/templates" : `https://yourdomain.com/templates/${currentTemplate?.id}`
+          "item": isGalleryView ? "https://www.freebiodatagenerator.com/templates" : `https://www.freebiodatagenerator.com/templates/${currentTemplate?.id}`
         }
       ]
     },
@@ -79,7 +79,7 @@ const TemplatePageSEO = ({
           "position": index + 1,
           "name": template.name,
           "description": template.description,
-          "image": `https://yourdomain.com${template.preview}`,
+          "image": `https://www.freebiodatagenerator.com${template.preview}`,
           "category": template.category
         }))
       }
@@ -89,41 +89,41 @@ const TemplatePageSEO = ({
   return (
     <Helmet>
       <title>
-        {isGalleryView 
-          ? "Marriage Biodata Templates - Choose Professional Designs" 
+        {isGalleryView
+          ? "Marriage Biodata Templates - Choose Professional Designs"
           : `${currentTemplate?.name} - Marriage Biodata Template`}
       </title>
-      <meta 
-        name="description" 
-        content={isGalleryView 
+      <meta
+        name="description"
+        content={isGalleryView
           ? "Choose from our collection of professional marriage biodata templates. Beautiful, customizable designs for your matrimonial profile with instant download."
           : `Preview and download the ${currentTemplate?.name} biodata template. ${currentTemplate?.description}`}
       />
-      <meta 
-        name="keywords" 
+      <meta
+        name="keywords"
         content={isGalleryView
           ? "marriage biodata templates, matrimonial templates, biodata designs, wedding biodata, professional biodata"
           : `${currentTemplate?.name}, biodata template, marriage biodata, matrimonial profile, ${currentTemplate?.category}`}
       />
-      <link rel="canonical" href={isGalleryView ? "https://yourdomain.com/templates" : `https://yourdomain.com/templates/${currentTemplate?.id}`} />
-      
+      <link rel="canonical" href={isGalleryView ? "https://www.freebiodatagenerator.com/templates" : `https://www.freebiodatagenerator.com/templates/${currentTemplate?.id}`} />
+
       {/* Open Graph Tags */}
       <meta property="og:title" content={isGalleryView ? "Marriage Biodata Templates Gallery" : `${currentTemplate?.name} - Biodata Template`} />
       <meta property="og:description" content={isGalleryView ? "Choose from beautiful marriage biodata templates" : `Preview the ${currentTemplate?.name} biodata template`} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={isGalleryView ? "https://yourdomain.com/templates" : `https://yourdomain.com/templates/${currentTemplate?.id}`} />
-      <meta property="og:image" content={isGalleryView ? "https://yourdomain.com/templates-gallery.jpg" : `https://yourdomain.com${currentTemplate?.preview}`} />
-      
+      <meta property="og:url" content={isGalleryView ? "https://www.freebiodatagenerator.com/templates" : `https://www.freebiodatagenerator.com/templates/${currentTemplate?.id}`} />
+      <meta property="og:image" content={isGalleryView ? "https://www.freebiodatagenerator.com/templates-gallery.jpg" : `https://www.freebiodatagenerator.com${currentTemplate?.preview}`} />
+
       {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={isGalleryView ? "Marriage Biodata Templates Gallery" : `${currentTemplate?.name} Template`} />
       <meta name="twitter:description" content={isGalleryView ? "Choose from beautiful marriage biodata templates" : currentTemplate?.description} />
-      <meta name="twitter:image" content={isGalleryView ? "https://yourdomain.com/templates-gallery.jpg" : `https://yourdomain.com${currentTemplate?.preview}`} />
-      
+      <meta name="twitter:image" content={isGalleryView ? "https://www.freebiodatagenerator.com/templates-gallery.jpg" : `https://www.freebiodatagenerator.com${currentTemplate?.preview}`} />
+
       {/* Additional SEO Tags */}
       <meta name="robots" content="index, follow" />
       <meta name="author" content="Marriage Biodata Maker" />
-      
+
       {/* Structured Data */}
       <script type="application/ld+json">
         {JSON.stringify(schemaData)}
@@ -136,7 +136,7 @@ const TemplatePageSEO = ({
 const Breadcrumb = ({ selectedTemplate, templates }: { selectedTemplate: number | null; templates: TemplateData[] }) => {
   const navigate = useNavigate();
   const currentTemplate = templates.find(t => t.id === selectedTemplate);
-  
+
   return (
     <nav aria-label="Breadcrumb navigation" className="mb-6">
       <ol className="flex items-center space-x-2 text-sm text-gray-600">
@@ -169,11 +169,11 @@ const Breadcrumb = ({ selectedTemplate, templates }: { selectedTemplate: number 
 };
 
 // Template Card Component
-const TemplateCard = ({ 
-  template, 
-  onSelect 
-}: { 
-  template: TemplateData; 
+const TemplateCard = ({
+  template,
+  onSelect
+}: {
+  template: TemplateData;
   onSelect: (id: number) => void;
 }) => {
   return (
@@ -218,57 +218,57 @@ const BiodataTemplate = () => {
   }, [selectedTemplate]);
 
   const templates: TemplateData[] = [
-    { 
-      id: 1, 
-      component: <Template3 formData={formData} />, 
+    {
+      id: 1,
+      component: <Template3 formData={formData} />,
       preview: preview1,
       name: "Classic Professional",
       description: "Clean and professional design perfect for traditional families",
       category: "Professional"
     },
-    { 
-      id: 2, 
-      component: <Template7 formData={formData} />, 
+    {
+      id: 2,
+      component: <Template7 formData={formData} />,
       preview: preview7,
       name: "Modern Elegant",
       description: "Contemporary design with elegant typography and layout",
       category: "Modern"
     },
-    { 
-      id: 3, 
-      component: <Template4 formData={formData} />, 
+    {
+      id: 3,
+      component: <Template4 formData={formData} />,
       preview: preview4,
       name: "Traditional Heritage",
       description: "Traditional Indian design with cultural elements",
       category: "Traditional"
     },
-    { 
-      id: 4, 
-      component: <Template6 formData={formData} />, 
+    {
+      id: 4,
+      component: <Template6 formData={formData} />,
       preview: preview6,
       name: "Minimalist Style",
       description: "Simple and clean design focusing on essential information",
       category: "Minimalist"
     },
-    { 
-      id: 5, 
-      component: <Template5 formData={formData} />, 
+    {
+      id: 5,
+      component: <Template5 formData={formData} />,
       preview: preview5,
       name: "Floral Design",
       description: "Beautiful floral patterns perfect for wedding biodata",
       category: "Decorative"
     },
-    { 
-      id: 6, 
-      component: <Template1 formData={formData} />, 
+    {
+      id: 6,
+      component: <Template1 formData={formData} />,
       preview: preview2,
       name: "Royal Classic",
       description: "Luxurious design with royal elements and gold accents",
       category: "Luxury"
     },
-    { 
-      id: 7, 
-      component: <Template2 formData={formData} />, 
+    {
+      id: 7,
+      component: <Template2 formData={formData} />,
       preview: preview3,
       name: "Contemporary Chic",
       description: "Modern chic design with sophisticated typography",
@@ -300,19 +300,19 @@ const BiodataTemplate = () => {
             }
           }
         });
-        
+
         const imgWidth = 210;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
+
         const pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
           format: 'a4'
         });
-        
+
         const imgData = canvas.toDataURL('image/jpeg', 1.0);
         pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-        
+
         const currentTemplate = templates.find(t => t.id === templateId);
         pdf.save(`${currentTemplate?.name.toLowerCase().replace(/\s+/g, '-')}-biodata.pdf`);
       } catch (error) {
@@ -328,10 +328,10 @@ const BiodataTemplate = () => {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
         <TemplatePageSEO selectedTemplate={null} templates={templates} />
-        
+
         <div className="max-w-6xl mx-auto">
           <Breadcrumb selectedTemplate={null} templates={templates} />
-          
+
           <header className="mb-8">
             <h1 className="text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               <LayoutGrid className="w-8 h-8" />
@@ -341,7 +341,7 @@ const BiodataTemplate = () => {
               Choose from our collection of professional biodata templates. Each design is crafted to showcase your profile beautifully.
             </p>
           </header>
-          
+
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {templates.map((template) => (
               <TemplateCard
@@ -361,10 +361,10 @@ const BiodataTemplate = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <TemplatePageSEO selectedTemplate={selectedTemplate} templates={templates} />
-      
+
       <div className="max-w-6xl mx-auto">
         <Breadcrumb selectedTemplate={selectedTemplate} templates={templates} />
-        
+
         <div className="flex items-center justify-between mb-6">
           <Button
             onClick={() => setShowTemplateGallery(true)}
@@ -374,16 +374,16 @@ const BiodataTemplate = () => {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Templates
           </Button>
-          
+
           <div className="text-right">
             <h1 className="text-2xl font-bold text-gray-800">{currentTemplate?.name}</h1>
             <p className="text-gray-600">{currentTemplate?.description}</p>
           </div>
         </div>
-        
+
         <main className="bg-white rounded-lg shadow-lg p-4">
           {templates.map((template) => (
-            <div 
+            <div
               key={template.id}
               id={`template-${template.id}`}
               className={`${selectedTemplate === template.id ? 'block' : 'hidden'} pdf-template`}
@@ -394,7 +394,7 @@ const BiodataTemplate = () => {
         </main>
 
         <div className="mt-6 flex justify-center">
-          <Button 
+          <Button
             onClick={() => selectedTemplate && handleDownload(selectedTemplate)}
             disabled={isDownloading}
             className="bg-blue-600 text-white hover:bg-blue-700 px-8 py-3 text-lg"
