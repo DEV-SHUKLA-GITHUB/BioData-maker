@@ -47,7 +47,6 @@ const Template1SEO = ({ formData }: { formData: FormData }) => {
         name="keywords" 
         content={`${personName}, marriage biodata, matrimonial profile, royal classic template, luxury biodata design`}
       />
-      <meta name="robots" content="noindex, nofollow" />
       
       <script type="application/ld+json">
         {JSON.stringify(schemaData)}

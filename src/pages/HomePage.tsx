@@ -13,6 +13,7 @@ import img3 from '../assets/template7Preview.png';
 // import img4 from '../assets/template4Preview.png';
 import img5 from '../assets/template5Preview.png';
 import logo from "../assets/logo.png"
+import Header from '../components/Header';
 // Preload critical images
 const preloadImages = [img1, img2, img3];
 
@@ -665,16 +666,16 @@ const Footer: React.FC = () => {
           </p>
 
           <div className="flex justify-center space-x-6 mb-8">
-            <a href="#" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Facebook">
+            <a href="https://www.facebook.com/" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Facebook">
               <FaFacebook size={24} />
             </a>
-            <a href="#" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Twitter">
+            <a href="https://x.com/" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Twitter">
               <FaTwitter size={24} />
             </a>
-            <a href="#" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Instagram">
+            <a href="https://www.instagram.com/" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Instagram">
               <FaInstagram size={24} />
             </a>
-            <a href="#" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="LinkedIn">
               <FaLinkedin size={24} />
             </a>
           </div>
@@ -683,7 +684,7 @@ const Footer: React.FC = () => {
             <ul className="flex flex-wrap justify-center space-x-8 text-sm">
               <li><a href="/" className="text-gray-400 hover:text-pink-500 transition-colors">Home</a></li>
               <li><a href="/about" className="text-gray-400 hover:text-pink-500 transition-colors">About Us</a></li>
-              <li><a href="/templates" className="text-gray-400 hover:text-pink-500 transition-colors">Templates</a></li>
+              {/* <li><a href="/templates" className="text-gray-400 hover:text-pink-500 transition-colors">Templates</a></li> */}
               <li><a href="/contact" className="text-gray-400 hover:text-pink-500 transition-colors">Contact</a></li>
               <li><a href="/privacy" className="text-gray-400 hover:text-pink-500 transition-colors">Privacy Policy</a></li>
             </ul>
@@ -694,7 +695,7 @@ const Footer: React.FC = () => {
               &copy; {currentYear} Marriage Biodata Maker. All rights reserved.
             </p>
             <p className="text-sm text-gray-500">
-              Contact us: info@marriagebiodatamaker.com | +1 (234) 567-8901
+              Contact us: techsoftwaresolutionlimited@gmail.com | +91 8103531353
             </p>
           </div>
         </motion.div>
@@ -731,6 +732,7 @@ const Homepage: React.FC = () => {
   return (
     <div className="min-h-screen">
       <HomepageSEO />
+      <Header />
       <HeroSection />
       <TemplateExamples />
       <Features />
