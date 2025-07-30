@@ -17,11 +17,11 @@ const TemplateDetail = lazy(() => import('./pages/TemplateDetails'));
 const App = () => {
   return (
     <ErrorBoundary>
+              <Analytics/>
       <Router>
         <Layout>
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
-              <Analytics/>
               <Route path="/" element={<Homepage />} />
               <Route path="/create-biodata" element={<BiodataForm />} />
               <Route path="/templates" element={<TemplatePage />} />
