@@ -7,7 +7,7 @@ import AboutUs from './pages/Aboutus';
 import ContactUs from './pages/Contactus';
 import PrivacyPolicy from './pages/Privacypolicy';
 import Layout from './Layout';
-
+import { Analytics } from "@vercel/analytics/react"
 // Lazy load components
 const Homepage = lazy(() => import('./pages/HomePage'));
 const BiodataForm = lazy(() => import('./pages/BiodataMaker'));
@@ -21,6 +21,7 @@ const App = () => {
         <Layout>
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
+              <Analytics/>
               <Route path="/" element={<Homepage />} />
               <Route path="/create-biodata" element={<BiodataForm />} />
               <Route path="/templates" element={<TemplatePage />} />
