@@ -358,7 +358,11 @@ const TemplateDetail = () => {
             </div>
           </div>
 
-          {/* Template Preview Container - Key Mobile Optimizations */}
+          <div className="block md:hidden w-full my-3">
+  <div className="bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 text-sm rounded-md px-4 py-2 shadow-sm">
+    The borders may not appear correctly in the preview, but your downloaded PDF will have everything properly formatted.
+  </div>
+</div>
           <main className={`bg-white rounded-lg shadow-lg overflow-hidden template-container ${isDownloading ? 'downloading' : ''}`}>
             <div className="md:p-4">
               <div 
@@ -370,7 +374,7 @@ const TemplateDetail = () => {
                   -mx-[240px] -my-[336px] md:mx-0 md:my-0
                   overflow-visible
                   print:w-[210mm] print:h-[297mm] print:scale-100 print:mx-0 print:my-0
-                  ${!isDownloading ? "max-md:ps-[8rem] max-md:pt-[55rem]" : ""}`}
+                  ${!isDownloading ? "max-md:pl-[30rem] max-md:w-[101rem] max-md:h-[76rem] max-md:pt-[55rem]" : ""}`}
                 style={{
                   paddingLeft: isDownloading ? '0' : undefined,
                   paddingTop: isDownloading ? '0' : undefined,
@@ -382,18 +386,18 @@ const TemplateDetail = () => {
             </div>
           </main>
 
-          {/* Download Button - Responsive */}
-          <div className="mt-4 md:mt-6 flex justify-center">
-            <Button
-              onClick={handleDownload}
-              disabled={isDownloading}
-              className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 md:px-8 md:py-3 text-base md:text-lg w-full md:w-auto"
-              aria-label={`Download ${currentTemplate.name} biodata template as PDF`}
-            >
-              <Download className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-              {isDownloading ? 'Generating PDF...' : 'Download as PDF'}
-            </Button>
-          </div>
+<div className="mt-4 md:mt-6 flex justify-center">
+  <Button
+    onClick={handleDownload}
+    disabled={isDownloading}
+    className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 md:px-8 md:py-3 text-base md:text-lg w-full md:w-auto"
+    aria-label={`Download ${currentTemplate.name} biodata template as PDF`}
+  >
+    <Download className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+    {isDownloading ? 'Generating PDF...' : 'Download as PDF'}
+  </Button>
+</div>
+
         </div>
       </div>
     </>
