@@ -3,7 +3,8 @@ import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Menu, X } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import logo from "../assets/logo.png";
+import logo from "../assets/logo2.png";
+import GoogleTranslate from './GoogleTranslate';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -26,51 +27,58 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="relative bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 text-white shadow-lg">
+    <header className="relative  bg-gradient-to-br from-[#f59e0b] via-[#b91c1c] to-[#d97706] text-white shadow-lg">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center justify-between h-16 lg:h-20 flex-wrap md:flex-nowrap">
+
           {/* Logo Section */}
-          <Link to="/" className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center space-x-3"
             >
-              <div className="w-10 h-10 lg:w-12 lg:h-12 bg-white/20 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
                 <img src={logo} className="w-8 h-8 lg:w-10 lg:h-10" alt="Marriage Biodata Maker Logo" />
               </div>
-              <div className="hidden sm:block">
-                <h1 className="text-lg lg:text-xl font-bold">Biodata Generator</h1>
-                <p className="text-xs text-white/80">Create Beautiful Biodata</p>
+              <div className="hidden sm:block min-w-0">
+                <h1 className="text-lg lg:text-xl font-bold truncate">Biodata Generator</h1>
+                <p className="text-xs text-white/80 truncate">Create Beautiful Biodata</p>
               </div>
             </motion.div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-8 flex-grow ml-6">
             {navigationLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.href}
-                className="text-white/90 hover:text-white hover:underline transition-colors duration-200 font-medium"
+                className="text-white/90 hover:text-white hover:underline transition-colors duration-200 font-medium whitespace-nowrap"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          {/* CTA Button & Mobile Menu Toggle */}
-          <div className="flex items-center space-x-4">
+          {/* Controls: Language Selector + Buttons */}
+          <div className="flex items-center space-x-4 ml-auto">
+
+            {/* Google Translate selector: hide on xs, show sm+ */}
+
             {/* Create Biodata Button */}
             <motion.button
               onClick={handleCreateBiodata}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="hidden sm:flex bg-white text-pink-600 px-6 py-2 lg:px-8 lg:py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg items-center space-x-2"
+              className="hidden sm:flex bg-white text-pink-600 px-6 py-2 lg:px-8 lg:py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg items-center space-x-2 whitespace-nowrap"
             >
               <Heart className="w-4 h-4" />
               <span>Create Biodata</span>
             </motion.button>
+            <div className="hidden sm:block">
+              <GoogleTranslate />
+            </div>
 
             {/* Mobile Create Biodata Button */}
             <motion.button
@@ -78,6 +86,7 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="sm:hidden bg-white text-pink-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+              aria-label="Create Biodata"
             >
               <Heart className="w-4 h-4" />
             </motion.button>
@@ -108,18 +117,21 @@ const Header: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="md:hidden bg-white/10 backdrop-blur-sm border-t border-white/20"
           >
-            <nav className="container mx-auto px-4 py-4">
-              <div className="flex flex-col space-y-4">
-                {navigationLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-white/90 hover:text-white py-2 font-medium transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+            <nav className="container mx-auto px-4 py-4 space-y-4">
+              {navigationLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-white/90 hover:text-white py-2 font-medium transition-colors block"
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* Move GoogleTranslate inside mobile menu below links for better UX */}
+              <div className="pt-4 border-t border-white/30">
+                <GoogleTranslate />
               </div>
             </nav>
           </motion.div>

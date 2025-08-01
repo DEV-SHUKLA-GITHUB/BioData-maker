@@ -8,6 +8,8 @@ import ContactUs from './pages/Contactus';
 import PrivacyPolicy from './pages/Privacypolicy';
 import Layout from './Layout';
 import { Analytics } from "@vercel/analytics/react"
+import GlobalGoogleTranslateStyles from './components/TranslateStyles';
+import ChatbotFloatingButton from './components/Whatsapp';
 // Lazy load components
 const Homepage = lazy(() => import('./pages/HomePage'));
 const BiodataForm = lazy(() => import('./pages/BiodataMaker'));
@@ -18,6 +20,7 @@ const App = () => {
   return (
     <ErrorBoundary>
               <Analytics/>
+              <GlobalGoogleTranslateStyles/>
       <Router>
         <Layout>
           <Suspense fallback={<LoadingSpinner />}>
@@ -33,6 +36,7 @@ const App = () => {
           </Suspense>
         </Layout>
       </Router>
+      <ChatbotFloatingButton />
     </ErrorBoundary>
   );
 };
