@@ -1,5 +1,5 @@
 // components/GlobalGoogleTranslateStyles.tsx
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 const GlobalGoogleTranslateStyles = () => {
   useEffect(() => {
