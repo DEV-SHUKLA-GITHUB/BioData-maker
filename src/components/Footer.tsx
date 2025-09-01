@@ -55,7 +55,7 @@ const Footer: React.FC = () => {
               &copy; {currentYear} Marriage Biodata Maker. All rights reserved.
             </p>
             <p className="text-sm text-gray-500">
-              Contact us: techsoftwaresolutionlimited@gmail.com | +91 8103531353
+              Contact us: freebiodatagenerator@gmail.com
             </p>
           </div>
         </motion.div>
