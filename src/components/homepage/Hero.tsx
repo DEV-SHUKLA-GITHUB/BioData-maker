@@ -3,7 +3,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Star, Users } from 'lucide-react';
 import logo from "../../assets/logo.webp";
-import swastik from "../../assets/swastik.webp";
 
 const HeroSection: React.FC = () => {
   const navigate = useNavigate();
@@ -42,9 +41,9 @@ const HeroSection: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 bg-gradient-to-br from-[#f59e0b] via-[#b91c1c] to-[#d97706] shadow-lg"
               >
-                <img src={swastik} className="w-80 h-auto" alt="logo" />
+                {/* <img src={swastik} className="w-80 h-auto" alt="logo" /> */}
                 <img src={logo} className="w-20 h-20" alt="logo" />
-                <img src={swastik} className="w-80 h-auto" alt="logo" />
+                {/* <img src={swastik} className="w-80 h-auto" alt="logo" /> */}
               </motion.div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight drop-shadow-md">
