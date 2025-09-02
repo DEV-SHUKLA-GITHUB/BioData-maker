@@ -47,7 +47,7 @@ const HeroSection: React.FC = () => {
               </motion.div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight drop-shadow-md">
-                Create Your Perfect{' '}
+                Create Your Perfect <br />
                 <span className="text-yellow-300">Marriage Biodata</span>
               </h1>
 
