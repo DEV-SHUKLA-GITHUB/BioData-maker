@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Star, Users } from 'lucide-react';
-import logo from "../../assets/logo.png";
-import swastik from "../../assets/swastik.png";
+import logo from "../../assets/logo.webp";
+import swastik from "../../assets/swastik.webp";
 
 const HeroSection: React.FC = () => {
   const navigate = useNavigate();

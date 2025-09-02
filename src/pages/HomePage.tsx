@@ -1,9 +1,9 @@
 // pages/HomePage.tsx
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import img1 from '../assets/template1Preview.png';
-import img2 from '../assets/template2Preview.png';
-import img3 from '../assets/template7Preview.png';
+import img1 from '../assets/template1Preview.webp';
+import img2 from '../assets/template2Preview.webp';
+import img3 from '../assets/template7Preview.webp';
 import HeroSection from '../components/homepage/Hero';
 import TemplateExamples from '../components/homepage/TemplateExamples';
 import Features from '../components/homepage/Features';

@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import React, {useState,useCallback, useMemo } from 'react';
-import img1 from '../../assets/template1Preview.png';
-import img2 from '../../assets/template2Preview.png';
-import img3 from '../../assets/template7Preview.png';
-// import img4 from '../assets/template4Preview.png';
-import img5 from '../../assets/template5Preview.png';
+import img1 from '../../assets/template1Preview.webp';
+import img2 from '../../assets/template2Preview.webp';
+import img3 from '../../assets/template7Preview.webp';
+// import img4 from '../assets/template4Preview.webp';
+import img5 from '../../assets/template5Preview.webp';
 const TemplateExamples: React.FC = () => {
   // const navigate = useNavigate();
 
