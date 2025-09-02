@@ -4,13 +4,13 @@ import { Helmet } from 'react-helmet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { LayoutGrid } from 'lucide-react';
-import preview1 from "../assets/template1Preview.webp"
-import preview2 from "../assets/template2Preview.webp"
-import preview3 from "../assets/template3Preview.webp"
-import preview4 from "../assets/template4Preview.webp"
-import preview5 from "../assets/template5Preview.webp"
-import preview6 from "../assets/template6Preview.webp"
-import preview7 from "../assets/template7Preview.webp"
+import preview1 from "../../public/assets/template1Preview.webp"
+import preview2 from "../../public/assets/template2Preview.webp"
+import preview3 from "../../public/assets/template3Preview.webp"
+import preview4 from "../../public/assets/template4Preview.webp"
+import preview5 from "../../public/assets/template5Preview.webp"
+import preview6 from "../../public/assets/template6Preview.webp"
+import preview7 from "../../public/assets/template7Preview.webp"
 
 interface TemplateData {
   id: number;

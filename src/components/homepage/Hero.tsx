@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Star, Users } from 'lucide-react';
-import logo from "../../assets/logo.webp";
+import logo from "../../../public/assets/logo.webp";
 
 const HeroSection: React.FC = () => {
   const navigate = useNavigate();
