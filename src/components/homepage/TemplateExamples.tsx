@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 import React, {useState,useCallback, useMemo } from 'react';
 import img1 from '../../../public/assets/template1Preview.webp';
 import img2 from '../../../public/assets/template2Preview.webp';
@@ -34,19 +34,6 @@ const TemplateExamples: React.FC = () => {
       category: "Minimalist"
     },
   ], []);
-const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 }
-};
-
-const staggerChildren = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
 const OptimizedImage: React.FC<{
   src: string;
   alt: string;
@@ -96,11 +83,7 @@ const OptimizedImage: React.FC<{
   return (
     <section className="py-16 lg:py-24 bg-gray-50">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
           className="text-center mb-12"
         >
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -110,19 +93,13 @@ const OptimizedImage: React.FC<{
             Choose from our collection of professionally designed templates.
             Each template is crafted with attention to detail and cultural sensitivity.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={staggerChildren}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {templates.map((template) => (
-            <motion.article
-              key={template.title}
-              variants={fadeInUp}
+            <article
               className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
             >
               <div className="relative overflow-hidden">
@@ -147,9 +124,9 @@ const OptimizedImage: React.FC<{
                   Preview Template
                 </button> */}
               </div>
-            </motion.article>
+            </article>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

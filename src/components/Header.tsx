@@ -1,6 +1,6 @@
 // components/Header.tsx
 import React, { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+// import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Menu, X } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import logo from "../../public/assets/logo2.webp";
@@ -33,11 +33,11 @@ const Header: React.FC = () => {
 
           {/* Logo Section */}
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
-            <motion.div
+            {/* <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center space-x-3"
-            >
+            > */}
               <div className="w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
                 <img src={logo} className="w-8 h-8 lg:w-10 lg:h-10" alt="Marriage Biodata Maker Logo" />
               </div>
@@ -45,7 +45,7 @@ const Header: React.FC = () => {
                 <h1 className="text-lg lg:text-xl font-bold truncate">Biodata Generator</h1>
                 <p className="text-xs text-white/80 truncate">Create Beautiful Biodata</p>
               </div>
-            </motion.div>
+            {/* </motion.div> */}
           </Link>
 
           {/* Desktop Navigation */}
@@ -67,29 +67,27 @@ const Header: React.FC = () => {
             {/* Google Translate selector: hide on xs, show sm+ */}
 
             {/* Create Biodata Button */}
-            <motion.button
-              onClick={handleCreateBiodata}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="hidden sm:flex bg-white text-pink-600 px-6 py-2 lg:px-8 lg:py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg items-center space-x-2 whitespace-nowrap"
-            >
-              <Heart className="w-4 h-4" />
-              <span>Create Biodata</span>
-            </motion.button>
+            <button
+  onClick={handleCreateBiodata}
+  className="hidden sm:flex bg-white text-pink-600 px-6 py-2 lg:px-8 lg:py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg items-center space-x-2 whitespace-nowrap"
+>
+  <Heart className="w-4 h-4" />
+  <span>Create Biodata</span>
+</button>
+
             <div className="hidden sm:block">
               <GoogleTranslate />
             </div>
 
             {/* Mobile Create Biodata Button */}
-            <motion.button
-              onClick={handleCreateBiodata}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="sm:hidden bg-white text-pink-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg"
-              aria-label="Create Biodata"
-            >
-              <Heart className="w-4 h-4" />
-            </motion.button>
+            <button
+  onClick={handleCreateBiodata}
+  className="sm:hidden bg-white text-pink-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+  aria-label="Create Biodata"
+>
+  <Heart className="w-4 h-4" />
+</button>
+
 
             {/* Mobile Menu Toggle */}
             <button
@@ -108,35 +106,27 @@ const Header: React.FC = () => {
       </div>
 
       {/* Mobile Navigation Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-white/10 backdrop-blur-sm border-t border-white/20"
-          >
-            <nav className="container mx-auto px-4 py-4 space-y-4">
-              {navigationLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-white/90 hover:text-white py-2 font-medium transition-colors block"
-                >
-                  {link.label}
-                </Link>
-              ))}
+     {isMobileMenuOpen && (
+  <div className="md:hidden bg-white/10 backdrop-blur-sm border-t border-white/20">
+    <nav className="container mx-auto px-4 py-4 space-y-4">
+      {navigationLinks.map((link) => (
+        <Link
+          key={link.label}
+          to={link.href}
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="text-white/90 hover:text-white py-2 font-medium transition-colors block"
+        >
+          {link.label}
+        </Link>
+      ))}
 
-              {/* Move GoogleTranslate inside mobile menu below links for better UX */}
-              <div className="pt-4 border-t border-white/30">
-                <GoogleTranslate />
-              </div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Move GoogleTranslate inside mobile menu below links for better UX */}
+      <div className="pt-4 border-t border-white/30">
+        <GoogleTranslate />
+      </div>
+    </nav>
+  </div>
+)}
     </header>
   );
 };

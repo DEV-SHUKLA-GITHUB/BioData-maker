@@ -1,4 +1,4 @@
-import { motion, } from 'framer-motion';
+// import { motion, } from 'framer-motion';
 import React, { useMemo } from 'react';
 import { Star} from 'lucide-react';
 
@@ -23,28 +23,11 @@ const Testimonials: React.FC = () => {
       text: "User-friendly interface and stunning templates. Perfect for creating professional biodata quickly."
     }
   ], []);
-  const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 }
-};
-
-const staggerChildren = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
 
   return (
     <section className="py-16 lg:py-24 bg-white">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
           className="text-center mb-12"
         >
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -53,19 +36,13 @@ const staggerChildren = {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Join thousands of satisfied users who have created their perfect biodata with our platform.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={staggerChildren}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <div
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {testimonials.map((testimonial) => (
-            <motion.div
-              key={testimonial.name}
-              variants={fadeInUp}
+            <div
               className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center mb-4">
@@ -85,9 +62,9 @@ const staggerChildren = {
                   <p className="text-sm text-gray-500">{testimonial.location}</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

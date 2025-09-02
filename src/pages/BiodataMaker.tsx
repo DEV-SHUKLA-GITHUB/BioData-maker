@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -495,21 +495,11 @@ const BiodataForm = () => {
         ContactDetails: "Add your contact information for interested parties to reach you"
     };
 
-    const containerVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-    };
-
-    const formSectionVariants = {
-        collapsed: { height: 0, overflow: 'hidden' },
-        expanded: { height: 'auto', overflow: 'visible' }
-    };
-
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <BiodataFormSEO />
 
-            <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+            <div>
                 <div className="max-w-2xl mx-auto">
                     <Breadcrumb />
 
@@ -561,8 +551,8 @@ const BiodataForm = () => {
 
                                 {/* Form Sections */}
                                 {(Object.keys(formData) as Array<keyof FormDataWithLabels>).map((section) => (
-                                    <motion.section key={section} className="rounded-lg bg-white shadow-sm">
-                                        <motion.button
+                                    <section key={section} className="rounded-lg bg-white shadow-sm">
+                                        <button
                                             type="button"
                                             className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
                                             onClick={() => setExpandedSection(section)}
@@ -585,13 +575,10 @@ const BiodataForm = () => {
                                             ) : (
                                                 <ChevronDown className="text-gray-500" />
                                             )}
-                                        </motion.button>
+                                        </button>
 
-                                        <motion.div
+                                        <div
                                             id={`${section}-content`}
-                                            variants={formSectionVariants}
-                                            initial="collapsed"
-                                            animate={expandedSection === section ? "expanded" : "collapsed"}
                                             className="px-4"
                                         >
                                             <DragDropContext onDragEnd={(result) => handleDragEnd(result, section)}>
@@ -795,11 +782,11 @@ const BiodataForm = () => {
                                                 <Plus className="w-4 h-4 mr-2" />
                                                 Add Field
                                             </Button>
-                                        </motion.div>
-                                    </motion.section>
+                                        </div>
+                                    </section>
                                 ))}
 
-                                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                                <div>
                                     <Button
                                         type="submit"
                                         className="w-full bg-gray-900 text-white hover:bg-gray-800 py-2.5 text-sm font-medium"
@@ -807,12 +794,12 @@ const BiodataForm = () => {
                                     >
                                         Generate Professional Biodata
                                     </Button>
-                                </motion.div>
+                                </div>
                             </form>
                         </CardContent>
                     </Card>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 };
