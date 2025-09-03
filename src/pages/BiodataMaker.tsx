@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
 import { Helmet } from 'react-helmet';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +32,8 @@ type FormDataWithLabels = {
     };
 }
 
-const initialFormData: FormDataWithLabels = {
+// Memoized constants to prevent recreation
+const INITIAL_FORM_DATA: FormDataWithLabels = {
     PersonalDetails: {
         name: { label: 'Name', value: '' },
         dateOfBirth: { label: 'Date of Birth', value: '' },
@@ -61,16 +62,38 @@ const initialFormData: FormDataWithLabels = {
     }
 };
 
-// Define mandatory fields that cannot be edited
 const MANDATORY_FIELDS = {
     PersonalDetails: ['name', 'dateOfBirth', 'placeOfBirth'],
     FamilyDetails: ['fatherName', 'motherName'],
     ContactDetails: ['ContactNumber', 'ContactPerson']
 };
 
-// SEO Component for BiodataForm
-const BiodataFormSEO = () => {
-    const schemaData = {
+// Memoized options arrays
+const RASHI_OPTIONS = [
+    "mesh (aries)", "varishabna (taurus)", "mithuna (gemini)", "karka (cancer)",
+    "simha (leo)", "kanya (virgo)", "tula (libra)", "vrischika (scorpio)",
+    "dhanur (sagittarius)", "makara (capricorn)", "kumbha (aquarius)", "meena (pisces)"
+];
+
+const COMPLEXION_OPTIONS = [
+    "very fair", "fair", "medium", "brown", "dark"
+];
+
+// Generate height options once
+const HEIGHT_OPTIONS: string[] = (() => {
+    const options: string[] = [];
+    for (let ft = 3; ft <= 8; ft++) {
+        for (let inch = 0; inch <= 11; inch++) {
+            options.push(`${ft}' ${inch}"`);
+            if (ft === 8 && inch === 0) break;
+        }
+    }
+    return options;
+})();
+
+// Memoized SEO Component
+const BiodataFormSEO = memo(() => {
+    const schemaData = useMemo(() => ({
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "Create Marriage Biodata - Biodata Maker Form",
@@ -114,7 +137,7 @@ const BiodataFormSEO = () => {
                 }
             ]
         }
-    };
+    }), []);
 
     return (
         <Helmet>
@@ -128,44 +151,42 @@ const BiodataFormSEO = () => {
                 content="create biodata, marriage biodata form, matrimonial profile, biodata maker, wedding biodata, personal details form"
             />
             <link rel="canonical" href="https://www.freebiodatagenerator.com/create-biodata" />
-
-            {/* Open Graph Tags */}
             <meta property="og:title" content="Create Marriage Biodata - Professional Biodata Maker Form" />
             <meta property="og:description" content="Create your professional marriage biodata with our easy-to-use form. Fill personal details and generate a beautiful biodata." />
             <meta property="og:type" content="website" />
             <meta property="og:url" content="https://www.freebiodatagenerator.com/create-biodata" />
             <meta property="og:image" content="https://www.freebiodatagenerator.com/biodata-form-preview.jpg" />
-
-            {/* Twitter Card Tags */}
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content="Create Marriage Biodata - Professional Biodata Maker Form" />
             <meta name="twitter:description" content="Create your professional marriage biodata with our easy-to-use form" />
             <meta name="twitter:image" content="https://www.freebiodatagenerator.com/biodata-form-preview.jpg" />
-
-            {/* Additional SEO Tags */}
             <meta name="robots" content="index, follow" />
             <meta name="author" content="Marriage Biodata Maker" />
             <meta name="language" content="en" />
-            <meta name="revisit-after" content="7 days" />
-
-            {/* Structured Data */}
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <script type="application/ld+json">
                 {JSON.stringify(schemaData)}
             </script>
         </Helmet>
     );
-};
+});
 
-// Breadcrumb Component for better navigation
-const Breadcrumb = () => {
+BiodataFormSEO.displayName = 'BiodataFormSEO';
+
+// Memoized Breadcrumb Component
+const Breadcrumb = memo(() => {
     const navigate = useNavigate();
+
+    const handleHomeClick = useCallback(() => {
+        navigate('/');
+    }, [navigate]);
 
     return (
         <nav aria-label="Breadcrumb navigation" className="mb-6">
             <ol className="flex items-center space-x-2 text-sm text-gray-600">
                 <li>
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={handleHomeClick}
                         className="hover:text-pink-600 transition-colors"
                     >
                         Home
@@ -178,11 +199,13 @@ const Breadcrumb = () => {
             </ol>
         </nav>
     );
-};
+});
 
-// Form Progress Indicator
-const FormProgress = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
-    const progress = (currentStep / totalSteps) * 100;
+Breadcrumb.displayName = 'Breadcrumb';
+
+// Memoized Form Progress Component
+const FormProgress = memo(({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
+    const progress = useMemo(() => (currentStep / totalSteps) * 100, [currentStep, totalSteps]);
 
     return (
         <div className="mb-6">
@@ -198,10 +221,12 @@ const FormProgress = ({ currentStep, totalSteps }: { currentStep: number; totalS
             </div>
         </div>
     );
-};
+});
 
-const BiodataForm = () => {
-    const [formData, setFormData] = useState<FormDataWithLabels>(initialFormData);
+FormProgress.displayName = 'FormProgress';
+
+const BiodataForm = memo(() => {
+    const [formData, setFormData] = useState<FormDataWithLabels>(INITIAL_FORM_DATA);
     const [expandedSection, setExpandedSection] = useState<string>('PersonalDetails');
     const [image, setImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>('');
@@ -211,32 +236,27 @@ const BiodataForm = () => {
     const labelInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
 
-    const rashiOptions = [
-        "mesh (aries)", "varishabna (taurus)", "mithuna (gemini)", "karka (cancer)",
-        "simha (leo)", "kanya (virgo)", "tula (libra)", "vrischika (scorpio)",
-        "dhanur (sagittarius)", "makara (capricorn)", "kumbha (aquarius)", "meena (pisces)"
-    ];
+    // Memoized field order
+    const [fieldOrder, setFieldOrder] = useState<Record<string, string[]>>(() => ({
+        PersonalDetails: Object.keys(INITIAL_FORM_DATA.PersonalDetails),
+        FamilyDetails: Object.keys(INITIAL_FORM_DATA.FamilyDetails),
+        ContactDetails: Object.keys(INITIAL_FORM_DATA.ContactDetails)
+    }));
 
-    const complexionOptions = [
-        "very fair", "fair", "medium", "brown", "dark"
-    ];
+    // Memoized constants
+    const sectionIcons = useMemo(() => ({
+        PersonalDetails: <User className="w-5 h-5" />,
+        FamilyDetails: <Users className="w-5 h-5" />,
+        ContactDetails: <PhoneCall className="w-5 h-5" />
+    }), []);
 
-    // Generate height options from 3' 0" to 8' 0"
-    const heightOptions: string[] = [];
-    for (let ft = 3; ft <= 8; ft++) {
-        for (let inch = 0; inch <= 11; inch++) {
-            heightOptions.push(`${ft}' ${inch}"`);
-            if (ft === 8 && inch === 0) break;
-        }
-    }
+    const sectionDescriptions = useMemo(() => ({
+        PersonalDetails: "Enter your personal information including name, date of birth, education, and occupation",
+        FamilyDetails: "Provide your family details including parents' names and occupations",
+        ContactDetails: "Add your contact information for interested parties to reach you"
+    }), []);
 
-    const [fieldOrder, setFieldOrder] = useState<Record<string, string[]>>({
-        PersonalDetails: Object.keys(initialFormData.PersonalDetails),
-        FamilyDetails: Object.keys(initialFormData.FamilyDetails),
-        ContactDetails: Object.keys(initialFormData.ContactDetails)
-    });
-
-    // Load saved data from localStorage
+    // Load saved data from localStorage (only once on mount)
     useEffect(() => {
         const saved = localStorage.getItem('biodataForm');
         if (saved) {
@@ -244,21 +264,12 @@ const BiodataForm = () => {
                 const parsed = JSON.parse(saved);
                 if (parsed.formData) setFormData(parsed.formData);
                 if (parsed.fieldOrder) setFieldOrder(parsed.fieldOrder);
+                if (parsed.imagePreview) setImagePreview(parsed.imagePreview);
             } catch (e) {
                 console.error('Error loading saved form data:', e);
             }
         }
     }, []);
-
-    // Auto-save form data
-    // useEffect(() => {
-    //     const dataToSave = {
-    //         formData,
-    //         fieldOrder,
-    //         imagePreview
-    //     };
-    //     localStorage.setItem('biodataForm', JSON.stringify(dataToSave));
-    // }, [formData, fieldOrder, imagePreview]);
 
     // Update current step based on expanded section
     useEffect(() => {
@@ -267,74 +278,30 @@ const BiodataForm = () => {
         setCurrentStep(stepIndex + 1);
     }, [expandedSection]);
 
-    // Custom hook to detect outside click
-    const useOutsideClick = (callback: () => void) => {
-        const ref = useRef<HTMLDivElement>(null);
-
-        useEffect(() => {
-            const handleClick = (event: MouseEvent) => {
-                if (ref.current && !ref.current.contains(event.target as Node)) {
-                    callback();
-                }
-            };
-
-            document.addEventListener('mousedown', handleClick);
-            return () => {
-                document.removeEventListener('mousedown', handleClick);
-            };
-        }, [callback]);
-
-        return ref;
-    };
-
-    // Check if a field is mandatory and cannot be edited
-    const isMandatoryField = (section: keyof FormDataWithLabels, fieldKey: string): boolean => {
+    // Memoized callbacks
+    const isMandatoryField = useCallback((section: keyof FormDataWithLabels, fieldKey: string): boolean => {
         return MANDATORY_FIELDS[section]?.includes(fieldKey) || false;
-    };
+    }, []);
 
-    // Save label changes
-    const saveLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string) => {
-        if (!newLabel.trim() || isMandatoryField(section, field)) return;
-
+    const handleInputChange = useCallback((section: keyof FormDataWithLabels, field: string, value: string) => {
         setFormData(prev => ({
             ...prev,
             [section]: {
                 ...prev[section],
                 [field]: {
                     ...prev[section][field],
-                    label: newLabel
+                    value
                 }
             }
         }));
-        setEditingLabel(null);
-        setTempLabel('');
-    };
+    }, []);
 
-    // Handle outside click to save label
-    const handleOutsideClick = () => {
-        if (editingLabel && tempLabel.trim()) {
-            const [section, field] = editingLabel.split('-');
-            saveLabelChange(section as keyof FormDataWithLabels, field, tempLabel);
-        } else {
-            cancelLabelEdit();
-        }
-    };
-
-    const outsideClickRef = useOutsideClick(handleOutsideClick);
-
-    const handleLabelChange = (section: keyof FormDataWithLabels, field: string, newLabel: string, e?: React.MouseEvent | React.KeyboardEvent) => {
-        if (e) {
-            e.preventDefault();
-        }
-        saveLabelChange(section, field, newLabel);
-    };
-
-    const handleDateChange = (date: Date | null, section: keyof FormDataWithLabels, field: string) => {
+    const handleDateChange = useCallback((date: Date | null, section: keyof FormDataWithLabels, field: string) => {
         const value = date ? date.toISOString().split('T')[0] : '';
         handleInputChange(section, field, value);
-    };
+    }, [handleInputChange]);
 
-    const handleDragEnd = (result: any, section: keyof FormDataWithLabels) => {
+    const handleDragEnd = useCallback((result: any, section: keyof FormDataWithLabels) => {
         if (!result.destination) return;
 
         const items = Array.from(fieldOrder[section]);
@@ -345,9 +312,9 @@ const BiodataForm = () => {
             ...prev,
             [section]: items
         }));
-    };
+    }, [fieldOrder]);
 
-    const handleAddField = (section: keyof FormDataWithLabels) => {
+    const handleAddField = useCallback((section: keyof FormDataWithLabels) => {
         const newFieldKey = `customField_${Date.now()}`;
         setFormData(prev => ({
             ...prev,
@@ -363,36 +330,9 @@ const BiodataForm = () => {
             ...prev,
             [section]: [...prev[section], newFieldKey]
         }));
-    };
+    }, []);
 
-    const handleInputChange = (section: keyof FormDataWithLabels, field: string, value: string) => {
-        setFormData(prev => ({
-            ...prev,
-            [section]: {
-                ...prev[section],
-                [field]: {
-                    ...prev[section][field],
-                    value
-                }
-            }
-        }));
-    };
-
-    const startEditingLabel = (section: keyof FormDataWithLabels, field: string) => {
-        if (isMandatoryField(section, field)) {
-            return;
-        }
-
-        setEditingLabel(`${section}-${field}`);
-        setTempLabel(formData[section][field].label);
-    };
-
-    const cancelLabelEdit = () => {
-        setEditingLabel(null);
-        setTempLabel('');
-    };
-
-    const handleDeleteField = (section: keyof FormDataWithLabels, fieldKey: string) => {
+    const handleDeleteField = useCallback((section: keyof FormDataWithLabels, fieldKey: string) => {
         if (isMandatoryField(section, fieldKey)) {
             return;
         }
@@ -410,19 +350,17 @@ const BiodataForm = () => {
             ...prev,
             [section]: prev[section].filter((key) => key !== fieldKey),
         }));
-    };
+    }, [isMandatoryField]);
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
 
-            // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 alert('Please select an image smaller than 5MB');
                 return;
             }
 
-            // Validate file type
             if (!file.type.startsWith('image/')) {
                 alert('Please select a valid image file');
                 return;
@@ -431,12 +369,11 @@ const BiodataForm = () => {
             setImage(file);
             setImagePreview(URL.createObjectURL(file));
         }
-    };
+    }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validate required fields
         const requiredFields = ['name', 'dateOfBirth', 'ContactNumber'];
         const missingFields = requiredFields.filter(field => {
             for (const section of Object.keys(formData)) {
@@ -472,113 +409,161 @@ const BiodataForm = () => {
             processedData.image = image;
         }
 
-        const dataToSave = {
-            formData,
-            fieldOrder,
-            imagePreview
-        };
-        console.log(dataToSave, "save")
+        const dataToSave = { formData, fieldOrder, imagePreview };
         localStorage.setItem('biodataForm', JSON.stringify(dataToSave));
         navigate('/templates', { state: { formData: processedData } });
-    };
+    }, [formData, fieldOrder, image, imagePreview, navigate]);
 
-    const sectionIcons = {
-        PersonalDetails: <User className="w-5 h-5" />,
-        FamilyDetails: <Users className="w-5 h-5" />,
-        ContactDetails: <PhoneCall className="w-5 h-5" />
-    };
+    // Custom hook for outside click detection
+    const useOutsideClick = useCallback((callback: () => void) => {
+        const ref = useRef<HTMLDivElement>(null);
 
-    const sectionDescriptions = {
-        PersonalDetails: "Enter your personal information including name, date of birth, education, and occupation",
-        FamilyDetails: "Provide your family details including parents' names and occupations",
-        ContactDetails: "Add your contact information for interested parties to reach you"
-    };
+        useEffect(() => {
+            const handleClick = (event: MouseEvent) => {
+                if (ref.current && !ref.current.contains(event.target as Node)) {
+                    callback();
+                }
+            };
+
+            document.addEventListener('mousedown', handleClick);
+            return () => {
+                document.removeEventListener('mousedown', handleClick);
+            };
+        }, [callback]);
+
+        return ref;
+    }, []);
+
+    const saveLabelChange = useCallback((section: keyof FormDataWithLabels, field: string, newLabel: string) => {
+        if (!newLabel.trim() || isMandatoryField(section, field)) return;
+
+        setFormData(prev => ({
+            ...prev,
+            [section]: {
+                ...prev[section],
+                [field]: {
+                    ...prev[section][field],
+                    label: newLabel
+                }
+            }
+        }));
+        setEditingLabel(null);
+        setTempLabel('');
+    }, [isMandatoryField]);
+
+    const handleOutsideClick = useCallback(() => {
+        if (editingLabel && tempLabel.trim()) {
+            const [section, field] = editingLabel.split('-');
+            saveLabelChange(section as keyof FormDataWithLabels, field, tempLabel);
+        } else {
+            setEditingLabel(null);
+            setTempLabel('');
+        }
+    }, [editingLabel, tempLabel, saveLabelChange]);
+
+    const outsideClickRef = useOutsideClick(handleOutsideClick);
+
+    const startEditingLabel = useCallback((section: keyof FormDataWithLabels, field: string) => {
+        if (isMandatoryField(section, field)) {
+            return;
+        }
+        setEditingLabel(`${section}-${field}`);
+        setTempLabel(formData[section][field].label);
+    }, [isMandatoryField, formData]);
+
+    const cancelLabelEdit = useCallback(() => {
+        setEditingLabel(null);
+        setTempLabel('');
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <BiodataFormSEO />
+            
+            <div className="max-w-2xl mx-auto">
+                <Breadcrumb />
 
-            <div>
-                <div className="max-w-2xl mx-auto">
-                    <Breadcrumb />
+                <Card className="shadow-lg">
+                    <CardHeader className="bg-gray-900 text-white rounded-t-lg">
+                        <CardTitle className="text-xl font-semibold text-center">
+                            Create Your Professional Marriage Biodata
+                        </CardTitle>
+                        <p className="text-center text-gray-300 text-sm mt-2">
+                            Fill in your details to generate a beautiful biodata template
+                        </p>
+                    </CardHeader>
 
-                    <Card className="shadow-lg">
-                        <CardHeader className="bg-gray-900 text-white rounded-t-lg">
-                            <CardTitle className="text-xl font-semibold text-center">
-                                Create Your Professional Marriage Biodata
-                            </CardTitle>
-                            <p className="text-center text-gray-300 text-sm mt-2">
-                                Fill in your details to generate a beautiful biodata template
-                            </p>
-                        </CardHeader>
+                    <CardContent className="p-4">
+                        <FormProgress currentStep={currentStep} totalSteps={3} />
 
-                        <CardContent className="p-4">
-                            <FormProgress currentStep={currentStep} totalSteps={3} />
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Profile Photo Section */}
+                            <section className="flex flex-col items-center space-y-4">
+                                <h3 className="text-lg font-medium text-gray-900">Profile Photo</h3>
+                                <div className="relative w-28 h-28 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 hover:border-pink-300 transition-all">
+                                    {imagePreview ? (
+                                        <img
+                                            src={imagePreview}
+                                            alt="Profile photo preview"
+                                            className="w-full h-full object-cover"
+                                            loading="lazy"
+                                            width="112"
+                                            height="112"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                            <Camera className="w-8 h-8 text-gray-400" />
+                                        </div>
+                                    )}
+                                </div>
+                                <Label
+                                    htmlFor="image"
+                                    className="cursor-pointer bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                                >
+                                    Upload Profile Photo
+                                </Label>
+                                <Input
+                                    id="image"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="hidden"
+                                    aria-label="Upload profile photo"
+                                />
+                            </section>
 
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                {/* Profile Photo Section */}
-                                <section className="flex flex-col items-center space-y-4">
-                                    <h3 className="text-lg font-medium text-gray-900">Profile Photo</h3>
-                                    <div className="relative w-28 h-28 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 hover:border-pink-300 transition-all">
-                                        {imagePreview ? (
-                                            <img
-                                                src={imagePreview}
-                                                alt="Profile photo preview"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center">
-                                                <Camera className="w-8 h-8 text-gray-400" />
-                                            </div>
-                                        )}
-                                    </div>
-                                    <Label
-                                        htmlFor="image"
-                                        className="cursor-pointer bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                            {/* Form Sections */}
+                            {(Object.keys(formData) as Array<keyof FormDataWithLabels>).map((section) => (
+                                <section key={section} className="rounded-lg bg-white shadow-sm">
+                                    <button
+                                        type="button"
+                                        className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                                        onClick={() => setExpandedSection(section)}
+                                        aria-expanded={expandedSection === section}
+                                        aria-controls={`${section}-content`}
                                     >
-                                        Upload Profile Photo
-                                    </Label>
-                                    <Input
-                                        id="image"
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        className="hidden"
-                                        aria-label="Upload profile photo"
-                                    />
-                                </section>
-
-                                {/* Form Sections */}
-                                {(Object.keys(formData) as Array<keyof FormDataWithLabels>).map((section) => (
-                                    <section key={section} className="rounded-lg bg-white shadow-sm">
-                                        <button
-                                            type="button"
-                                            className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
-                                            onClick={() => setExpandedSection(section)}
-                                            aria-expanded={expandedSection === section}
-                                            aria-controls={`${section}-content`}
-                                        >
-                                            <div className="flex items-center space-x-3">
-                                                {sectionIcons[section]}
-                                                <div className="text-left">
-                                                    <h3 className="text-base font-medium text-gray-700">
-                                                        {section.split(/(?=[A-Z])/).join(' ')}
-                                                    </h3>
-                                                    <p className="text-sm text-gray-500">
-                                                        {sectionDescriptions[section]}
-                                                    </p>
-                                                </div>
+                                        <div className="flex items-center space-x-3">
+                                            {sectionIcons[section]}
+                                            <div className="text-left">
+                                                <h3 className="text-base font-medium text-gray-700">
+                                                    {section.split(/(?=[A-Z])/).join(' ')}
+                                                </h3>
+                                                <p className="text-sm text-gray-500">
+                                                    {sectionDescriptions[section]}
+                                                </p>
                                             </div>
-                                            {expandedSection === section ? (
-                                                <ChevronUp className="text-gray-500" />
-                                            ) : (
-                                                <ChevronDown className="text-gray-500" />
-                                            )}
-                                        </button>
+                                        </div>
+                                        {expandedSection === section ? (
+                                            <ChevronUp className="text-gray-500" />
+                                        ) : (
+                                            <ChevronDown className="text-gray-500" />
+                                        )}
+                                    </button>
 
+                                    {expandedSection === section && (
                                         <div
                                             id={`${section}-content`}
-                                            className="px-4"
+                                            className="px-4 pb-4"
                                         >
                                             <DragDropContext onDragEnd={(result) => handleDragEnd(result, section)}>
                                                 <Droppable droppableId={section}>
@@ -625,7 +610,7 @@ const BiodataForm = () => {
                                                                                                     className="h-8"
                                                                                                     onKeyPress={(e) => {
                                                                                                         if (e.key === 'Enter') {
-                                                                                                            handleLabelChange(section, fieldKey, tempLabel, e);
+                                                                                                            saveLabelChange(section, fieldKey, tempLabel);
                                                                                                         }
                                                                                                     }}
                                                                                                     aria-label="Edit field label"
@@ -634,7 +619,7 @@ const BiodataForm = () => {
                                                                                                     variant="ghost"
                                                                                                     type='button'
                                                                                                     size="sm"
-                                                                                                    onClick={() => handleLabelChange(section, fieldKey, tempLabel)}
+                                                                                                    onClick={() => saveLabelChange(section, fieldKey, tempLabel)}
                                                                                                     className="h-8 px-2"
                                                                                                     aria-label="Save label changes"
                                                                                                 >
@@ -692,7 +677,6 @@ const BiodataForm = () => {
                                                                                                 step="any"
                                                                                                 value={config.value ? config.value.substring(0, 5) : ''}
                                                                                                 onChange={(e) => handleInputChange(section, fieldKey, e.target.value)}
-                                                                                                onFocus={(e) => e.target.showPicker && e.target.showPicker()}
                                                                                                 className="w-full border border-gray-200 rounded-md p-2 text-sm focus:ring-1 focus:ring-pink-300 focus:border-pink-300 focus:outline-none"
                                                                                                 placeholder="Select time of birth"
                                                                                                 aria-label="Select time of birth"
@@ -705,7 +689,7 @@ const BiodataForm = () => {
                                                                                                 aria-label="Select Rashi"
                                                                                             >
                                                                                                 <option value="">Select Rashi</option>
-                                                                                                {rashiOptions.map(opt => (
+                                                                                                {RASHI_OPTIONS.map(opt => (
                                                                                                     <option key={opt} value={opt}>{opt}</option>
                                                                                                 ))}
                                                                                             </select>
@@ -717,7 +701,7 @@ const BiodataForm = () => {
                                                                                                 aria-label="Select complexion"
                                                                                             >
                                                                                                 <option value="">Select Complexion</option>
-                                                                                                {complexionOptions.map(opt => (
+                                                                                                {COMPLEXION_OPTIONS.map(opt => (
                                                                                                     <option key={opt} value={opt}>{opt}</option>
                                                                                                 ))}
                                                                                             </select>
@@ -729,7 +713,7 @@ const BiodataForm = () => {
                                                                                                 aria-label="Select height"
                                                                                             >
                                                                                                 <option value="">Select Height</option>
-                                                                                                {heightOptions.map(opt => (
+                                                                                                {HEIGHT_OPTIONS.map(opt => (
                                                                                                     <option key={opt} value={opt}>{opt}</option>
                                                                                                 ))}
                                                                                             </select>
@@ -756,14 +740,11 @@ const BiodataForm = () => {
                                                                                             <X className="w-4 h-4" />
                                                                                         </Button>
                                                                                     )}
-                                                                                    {isMandatory && (
-                                                                                        <div className="text-gray-400 cursor-default h-8 px-4" />
-                                                                                    )}
                                                                                 </div>
                                                                             </div>
                                                                         )}
                                                                     </Draggable>
-                                                                )
+                                                                );
                                                             })}
                                                             {provided.placeholder}
                                                         </div>
@@ -782,25 +763,25 @@ const BiodataForm = () => {
                                                 Add Field
                                             </Button>
                                         </div>
-                                    </section>
-                                ))}
+                                    )}
+                                </section>
+                            ))}
 
-                                <div>
-                                    <Button
-                                        type="submit"
-                                        className="w-full bg-gray-900 text-white hover:bg-gray-800 py-2.5 text-sm font-medium"
-                                        aria-label="Generate biodata with filled information"
-                                    >
-                                        Generate Professional Biodata
-                                    </Button>
-                                </div>
-                            </form>
-                        </CardContent>
-                    </Card>
-                </div>
+                            <Button
+                                type="submit"
+                                className="w-full bg-gray-900 text-white hover:bg-gray-800 py-2.5 text-sm font-medium"
+                                aria-label="Generate biodata with filled information"
+                            >
+                                Generate Professional Biodata
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );
-};
+});
+
+BiodataForm.displayName = 'BiodataForm';
 
 export default BiodataForm;

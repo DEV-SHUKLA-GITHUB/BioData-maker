@@ -1,5 +1,4 @@
-// TemplatePage.tsx - Updated to only show template gallery
-import { useEffect } from 'react';
+import { useEffect, useCallback, useMemo, memo } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -20,9 +19,62 @@ interface TemplateData {
   category: string;
 }
 
-// SEO Component for Template Gallery
-const TemplatePageSEO = ({ templates }: { templates: TemplateData[] }) => {
-  const schemaData = {
+// Memoized static template data to prevent recreation
+const TEMPLATES: TemplateData[] = [
+  {
+    id: 1,
+    preview: preview1,
+    name: "Classic Professional",
+    description: "Clean and professional design perfect for traditional families",
+    category: "Professional"
+  },
+  {
+    id: 2,
+    preview: preview7,
+    name: "Modern Elegant",
+    description: "Contemporary design with elegant typography and layout",
+    category: "Modern"
+  },
+  {
+    id: 3,
+    preview: preview4,
+    name: "Traditional Heritage",
+    description: "Traditional Indian design with cultural elements",
+    category: "Traditional"
+  },
+  {
+    id: 4,
+    preview: preview6,
+    name: "Minimalist Style",
+    description: "Simple and clean design focusing on essential information",
+    category: "Minimalist"
+  },
+  {
+    id: 5,
+    preview: preview5,
+    name: "Floral Design",
+    description: "Beautiful floral patterns perfect for wedding biodata",
+    category: "Decorative"
+  },
+  {
+    id: 6,
+    preview: preview2,
+    name: "Royal Classic",
+    description: "Luxurious design with royal elements and gold accents",
+    category: "Luxury"
+  },
+  {
+    id: 7,
+    preview: preview3,
+    name: "Contemporary Chic",
+    description: "Modern chic design with sophisticated typography",
+    category: "Contemporary"
+  },
+];
+
+// Memoized SEO Component
+const TemplatePageSEO = memo(({ templates }: { templates: TemplateData[] }) => {
+  const schemaData = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Marriage Biodata Templates Gallery",
@@ -62,7 +114,7 @@ const TemplatePageSEO = ({ templates }: { templates: TemplateData[] }) => {
         "category": template.category
       }))
     }
-  };
+  }), [templates]);
 
   return (
     <Helmet>
@@ -76,38 +128,45 @@ const TemplatePageSEO = ({ templates }: { templates: TemplateData[] }) => {
         content="marriage biodata templates, matrimonial templates, biodata designs, wedding biodata, professional biodata"
       />
       <link rel="canonical" href="https://www.freebiodatagenerator.com/templates" />
-
-      {/* Open Graph Tags */}
       <meta property="og:title" content="Marriage Biodata Templates Gallery" />
       <meta property="og:description" content="Choose from beautiful marriage biodata templates" />
       <meta property="og:type" content="website" />
       <meta property="og:url" content="https://www.freebiodatagenerator.com/templates" />
       <meta property="og:image" content="https://www.freebiodatagenerator.com/templates-gallery.jpg" />
-
-      {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="Marriage Biodata Templates Gallery" />
       <meta name="twitter:description" content="Choose from beautiful marriage biodata templates" />
       <meta name="twitter:image" content="https://www.freebiodatagenerator.com/templates-gallery.jpg" />
-
-      {/* Structured Data */}
+      <meta name="robots" content="index, follow" />
+      <meta name="author" content="Marriage Biodata Maker" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <script type="application/ld+json">
         {JSON.stringify(schemaData)}
       </script>
     </Helmet>
   );
-};
+});
 
-// Breadcrumb Component
-const Breadcrumb = () => {
+TemplatePageSEO.displayName = 'TemplatePageSEO';
+
+// Memoized Breadcrumb Component
+const Breadcrumb = memo(() => {
   const navigate = useNavigate();
+
+  const handleHomeClick = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  const handleCreateBiodataClick = useCallback(() => {
+    navigate('/create-biodata');
+  }, [navigate]);
 
   return (
     <nav aria-label="Breadcrumb navigation" className="mb-6">
       <ol className="flex items-center space-x-2 text-sm text-gray-600">
         <li>
           <button
-            onClick={() => navigate('/')}
+            onClick={handleHomeClick}
             className="hover:text-pink-600 transition-colors"
           >
             Home
@@ -116,7 +175,7 @@ const Breadcrumb = () => {
         <li className="flex items-center space-x-2">
           <span>/</span>
           <button
-            onClick={() => navigate('/create-biodata')}
+            onClick={handleCreateBiodataClick}
             className="hover:text-pink-600 transition-colors"
           >
             Create Biodata
@@ -129,16 +188,26 @@ const Breadcrumb = () => {
       </ol>
     </nav>
   );
-};
+});
 
-// Template Card Component
-const TemplateCard = ({
+Breadcrumb.displayName = 'Breadcrumb';
+
+// Memoized Template Card Component
+const TemplateCard = memo(({
   template,
   onViewDetails
 }: {
   template: TemplateData;
   onViewDetails: (id: number) => void;
 }) => {
+  const handleImageClick = useCallback(() => {
+    onViewDetails(template.id);
+  }, [template.id, onViewDetails]);
+
+  const handleButtonClick = useCallback(() => {
+    onViewDetails(template.id);
+  }, [template.id, onViewDetails]);
+
   return (
     <article className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
       <div className="relative">
@@ -146,8 +215,10 @@ const TemplateCard = ({
           src={template.preview}
           alt={`${template.name} - Professional marriage biodata template preview`}
           className="w-full h-64 object-contain cursor-pointer hover:scale-105 transition-transform"
-          onClick={() => onViewDetails(template.id)}
+          onClick={handleImageClick}
           loading="lazy"
+          width="300"
+          height="256"
         />
         <div className="absolute top-2 right-2 bg-pink-600 text-white px-2 py-1 rounded-full text-xs">
           {template.category}
@@ -157,7 +228,7 @@ const TemplateCard = ({
         <h3 className="font-semibold text-gray-800 mb-2">{template.name}</h3>
         <p className="text-sm text-gray-600 mb-3">{template.description}</p>
         <Button
-          onClick={() => onViewDetails(template.id)}
+          onClick={handleButtonClick}
           className="w-full text-white bg-blue-600 hover:bg-blue-700"
           aria-label={`View details of ${template.name} biodata template`}
         >
@@ -166,81 +237,36 @@ const TemplateCard = ({
       </div>
     </article>
   );
-};
+});
 
-const TemplatePage = () => {
+TemplateCard.displayName = 'TemplateCard';
+
+const TemplatePage = memo(() => {
   const location = useLocation();
   const navigate = useNavigate();
   const formData = location.state?.formData;
 
+  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // If no form data, redirect to create biodata page
+  // Redirect if no form data
   useEffect(() => {
     if (!formData) {
       navigate('/create-biodata');
     }
   }, [formData, navigate]);
 
-  const templates: TemplateData[] = [
-    {
-      id: 1,
-      preview: preview1,
-      name: "Classic Professional",
-      description: "Clean and professional design perfect for traditional families",
-      category: "Professional"
-    },
-    {
-      id: 2,
-      preview: preview7,
-      name: "Modern Elegant",
-      description: "Contemporary design with elegant typography and layout",
-      category: "Modern"
-    },
-    {
-      id: 3,
-      preview: preview4,
-      name: "Traditional Heritage",
-      description: "Traditional Indian design with cultural elements",
-      category: "Traditional"
-    },
-    {
-      id: 4,
-      preview: preview6,
-      name: "Minimalist Style",
-      description: "Simple and clean design focusing on essential information",
-      category: "Minimalist"
-    },
-    {
-      id: 5,
-      preview: preview5,
-      name: "Floral Design",
-      description: "Beautiful floral patterns perfect for wedding biodata",
-      category: "Decorative"
-    },
-    {
-      id: 6,
-      preview: preview2,
-      name: "Royal Classic",
-      description: "Luxurious design with royal elements and gold accents",
-      category: "Luxury"
-    },
-    {
-      id: 7,
-      preview: preview3,
-      name: "Contemporary Chic",
-      description: "Modern chic design with sophisticated typography",
-      category: "Contemporary"
-    },
-  ];
-
-  const handleViewDetails = (templateId: number) => {
+  // Memoized callback for handling template selection
+  const handleViewDetails = useCallback((templateId: number) => {
     navigate(`template-detail/${templateId}`, {
       state: { formData }
     });
-  };
+  }, [navigate, formData]);
+
+  // Memoized templates to prevent unnecessary re-renders
+  const templates = useMemo(() => TEMPLATES, []);
 
   if (!formData) {
     return null; // Will redirect via useEffect
@@ -275,6 +301,8 @@ const TemplatePage = () => {
       </div>
     </div>
   );
-};
+});
+
+TemplatePage.displayName = 'TemplatePage';
 
 export default TemplatePage;

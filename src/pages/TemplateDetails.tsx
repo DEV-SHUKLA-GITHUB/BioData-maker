@@ -1,5 +1,4 @@
-// TemplateDetail.tsx - Corrected version
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -13,13 +12,13 @@ import Template4 from './Template4';
 import Template5 from './Template5';
 import Template6 from './Template6';
 import Template7 from './Template7';
-import preview1 from "/assets/template1Preview.webp"
-import preview2 from "/assets/template2Preview.webp"
-import preview3 from "/assets/template3Preview.webp"
-import preview4 from "/assets/template4Preview.webp"
-import preview5 from "/assets/template5Preview.webp"
-import preview6 from "/assets/template6Preview.webp"
-import preview7 from "/assets/template7Preview.webp"
+import preview1 from "/assets/template1Preview.webp";
+import preview2 from "/assets/template2Preview.webp";
+import preview3 from "/assets/template3Preview.webp";
+import preview4 from "/assets/template4Preview.webp";
+import preview5 from "/assets/template5Preview.webp";
+import preview6 from "/assets/template6Preview.webp";
+import preview7 from "/assets/template7Preview.webp";
 
 interface TemplateData {
   id: number;
@@ -30,11 +29,11 @@ interface TemplateData {
   category: string;
 }
 
-// SEO Component for Template Detail
-const TemplateDetailSEO = ({ template }: { template: TemplateData | undefined }) => {
+// Memoized SEO Component
+const TemplateDetailSEO = memo(({ template }: { template: TemplateData | undefined }) => {
   if (!template) return null;
 
-  const schemaData = {
+  const schemaData = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": `${template.name} - Biodata Template`,
@@ -69,7 +68,7 @@ const TemplateDetailSEO = ({ template }: { template: TemplateData | undefined })
         }
       ]
     }
-  };
+  }), [template]);
 
   return (
     <Helmet>
@@ -83,58 +82,52 @@ const TemplateDetailSEO = ({ template }: { template: TemplateData | undefined })
         content={`${template.name}, biodata template, marriage biodata, matrimonial profile, ${template.category}`}
       />
       <link rel="canonical" href={`https://www.freebiodatagenerator.com/template-detail/${template.id}`} />
-
-      {/* Open Graph Tags */}
       <meta property="og:title" content={`${template.name} - Biodata Template`} />
       <meta property="og:description" content={`Preview the ${template.name} biodata template`} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={`https://www.freebiodatagenerator.com/template-detail/${template.id}`} />
       <meta property="og:image" content={`https://www.freebiodatagenerator.com${template.preview}`} />
-
-      {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={`${template.name} Template`} />
       <meta name="twitter:description" content={template.description} />
       <meta name="twitter:image" content={`https://www.freebiodatagenerator.com${template.preview}`} />
-
-      {/* Structured Data */}
+      <meta name="robots" content="index, follow" />
+      <meta name="author" content="Marriage Biodata Maker" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <script type="application/ld+json">
         {JSON.stringify(schemaData)}
       </script>
     </Helmet>
   );
-};
+});
 
-// Breadcrumb Component
-const Breadcrumb = ({ template }: { template: TemplateData | undefined }) => {
+TemplateDetailSEO.displayName = 'TemplateDetailSEO';
+
+// Memoized Breadcrumb Component
+const Breadcrumb = memo(({ template }: { template: TemplateData | undefined }) => {
   const navigate = useNavigate();
+
+  const handleHomeClick = useCallback(() => navigate('/'), [navigate]);
+  const handleCreateBiodataClick = useCallback(() => navigate('/create-biodata'), [navigate]);
+  const handleTemplatesClick = useCallback(() => navigate('/templates'), [navigate]);
 
   return (
     <nav aria-label="Breadcrumb navigation" className="mb-4 md:mb-6">
       <ol className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-gray-600 flex-wrap">
         <li>
-          <button
-            onClick={() => navigate('/')}
-            className="hover:text-pink-600 transition-colors"
-          >
+          <button onClick={handleHomeClick} className="hover:text-pink-600 transition-colors">
             Home
           </button>
         </li>
         <li className="flex items-center space-x-1 md:space-x-2">
           <span>/</span>
-          <button
-            onClick={() => navigate('/create-biodata')}
-            className="hover:text-pink-600 transition-colors"
-          >
+          <button onClick={handleCreateBiodataClick} className="hover:text-pink-600 transition-colors">
             Create Biodata
           </button>
         </li>
         <li className="flex items-center space-x-1 md:space-x-2">
           <span>/</span>
-          <button
-            onClick={() => navigate('/templates')}
-            className="hover:text-pink-600 transition-colors"
-          >
+          <button onClick={handleTemplatesClick} className="hover:text-pink-600 transition-colors">
             Templates
           </button>
         </li>
@@ -147,27 +140,82 @@ const Breadcrumb = ({ template }: { template: TemplateData | undefined }) => {
       </ol>
     </nav>
   );
-};
+});
 
-const TemplateDetail = () => {
+Breadcrumb.displayName = 'Breadcrumb';
+
+// Memoized Mobile Alert Component
+const MobileAlert = memo(() => (
+  <div className="block md:hidden w-full my-3">
+    <div className="bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 text-sm rounded-md px-4 py-2 shadow-sm">
+      The borders may not appear correctly in the preview, but your downloaded PDF will have everything properly formatted.
+    </div>
+  </div>
+));
+
+MobileAlert.displayName = 'MobileAlert';
+
+// Memoized CSS Styles Component
+const StylesComponent = memo(() => (
+  <Helmet>
+    <style type="text/css">{`
+      @media (max-width: 768px) {
+        .pdf-template * {
+          pointer-events: none;
+        }
+        .pdf-template {
+          font-size: inherit !important;
+          line-height: inherit !important;
+        }
+        .pdf-template img,
+        .pdf-template [style*="background"] {
+          display: block !important;
+          visibility: visible !important;
+        }
+        .template-container {
+          overflow-x: auto;
+          overflow-y: hidden;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .template-container::-webkit-scrollbar {
+          display: none;
+        }
+        .downloading .pdf-template {
+          padding-left: 0 !important;
+          padding-top: 0 !important;
+          padding-inline-start: 0 !important;
+        }
+      }
+    `}</style>
+  </Helmet>
+));
+
+StylesComponent.displayName = 'StylesComponent';
+
+const TemplateDetail = memo(() => {
   const { templateId } = useParams<{ templateId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const { formData } = location.state as { formData: any } || {};
+
   const [isDownloading, setIsDownloading] = useState(false);
 
+  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // If no form data, redirect to create biodata page
+  // Redirect if no form data
   useEffect(() => {
     if (!formData) {
       navigate('/create-biodata');
     }
   }, [formData, navigate]);
 
-  const templates: TemplateData[] = [
+  // Memoized templates array to prevent recreation
+  const templates: TemplateData[] = useMemo(() => [
     {
       id: 1,
       component: <Template3 formData={formData} />,
@@ -224,19 +272,25 @@ const TemplateDetail = () => {
       description: "Modern chic design with sophisticated typography",
       category: "Contemporary"
     },
-  ];
+  ], [formData]);
 
-  const currentTemplate = templates.find(t => t.id === parseInt(templateId || '0'));
+  // Memoized current template
+  const currentTemplate = useMemo(() =>
+    templates.find(t => t.id === parseInt(templateId || '0')),
+    [templates, templateId]
+  );
 
-  const handleDownload = async () => {
+  // Memoized download handler
+  const handleDownload = useCallback(async () => {
     if (!currentTemplate) return;
-    
+
     setIsDownloading(true);
-    
-    // Wait for the DOM to update
+
+    // Wait for DOM update
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     const element = document.getElementById(`template-${currentTemplate.id}`);
+
     if (element) {
       try {
         const canvas = await html2canvas(element, {
@@ -248,12 +302,10 @@ const TemplateDetail = () => {
           onclone: (clonedDoc) => {
             const clonedElement = clonedDoc.getElementById(`template-${currentTemplate.id}`);
             if (clonedElement) {
-              // Remove all mobile-specific styles for PDF generation
               clonedElement.style.width = '1000px';
               clonedElement.style.height = '1400px';
               clonedElement.style.paddingLeft = '0';
               clonedElement.style.paddingTop = '0';
-              clonedElement.style.paddingLeft = '0';
               clonedElement.style.transform = 'none';
               clonedElement.style.scale = '1';
               clonedElement.style.margin = '0';
@@ -273,7 +325,6 @@ const TemplateDetail = () => {
 
         const imgData = canvas.toDataURL('image/jpeg', 1.0);
         pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-
         pdf.save(`${currentTemplate.name.toLowerCase().replace(/\s+/g, '-')}-biodata.pdf`);
       } catch (error) {
         console.error('Error generating PDF:', error);
@@ -282,66 +333,29 @@ const TemplateDetail = () => {
         setIsDownloading(false);
       }
     }
-  };
+  }, [currentTemplate]);
 
-  const handleBackToTemplates = () => {
+  // Memoized back to templates handler
+  const handleBackToTemplates = useCallback(() => {
     navigate('/templates', { state: { formData } });
-  };
+  }, [navigate, formData]);
 
+  // Early return if no data
   if (!formData || !currentTemplate) {
-    return null; // Will redirect via useEffect
+    return null;
   }
 
   return (
     <>
-      {/* Mobile-specific styles using Helmet for global CSS */}
-      <Helmet>
-        <style type="text/css">{`
-          @media (max-width: 768px) {
-            .pdf-template * {
-              pointer-events: none;
-            }
-            
-            .pdf-template {
-              font-size: inherit !important;
-              line-height: inherit !important;
-            }
-            
-            .pdf-template img,
-            .pdf-template [style*="background"] {
-              display: block !important;
-              visibility: visible !important;
-            }
-            
-            .template-container {
-              overflow-x: auto;
-              overflow-y: hidden;
-              -webkit-overflow-scrolling: touch;
-              scrollbar-width: none;
-              -ms-overflow-style: none;
-            }
-            
-            .template-container::-webkit-scrollbar {
-              display: none;
-            }
-            
-            /* Remove padding styles when downloading */
-            .downloading .pdf-template {
-              padding-left: 0 !important;
-              padding-top: 0 !important;
-              padding-inline-start: 0 !important;
-            }
-          }
-        `}</style>
-      </Helmet>
-
+      <StylesComponent />
+      
       <div className="min-h-screen bg-gray-50 p-2 md:p-8">
         <TemplateDetailSEO template={currentTemplate} />
 
         <div className="max-w-6xl mx-auto">
           <Breadcrumb template={currentTemplate} />
 
-          {/* Header Section - Responsive */}
+          {/* Header Section */}
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-6 gap-4">
             <Button
               onClick={handleBackToTemplates}
@@ -353,20 +367,21 @@ const TemplateDetail = () => {
             </Button>
 
             <div className="text-left md:text-right">
-              <h1 className="text-lg md:text-2xl font-bold text-gray-800">{currentTemplate.name}</h1>
-              <p className="text-sm md:text-base text-gray-600">{currentTemplate.description}</p>
+              <h1 className="text-lg md:text-2xl font-bold text-gray-800">
+                {currentTemplate.name}
+              </h1>
+              <p className="text-sm md:text-base text-gray-600">
+                {currentTemplate.description}
+              </p>
             </div>
           </div>
 
-          <div className="block md:hidden w-full my-3">
-  <div className="bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 text-sm rounded-md px-4 py-2 shadow-sm">
-    The borders may not appear correctly in the preview, but your downloaded PDF will have everything properly formatted.
-  </div>
-</div>
+          <MobileAlert />
+
           <main className={`bg-white rounded-lg shadow-lg overflow-hidden template-container ${isDownloading ? 'downloading' : ''}`}>
             <div className="md:p-4">
-              <div 
-                id={`template-${currentTemplate.id}`} 
+              <div
+                id={`template-${currentTemplate.id}`}
                 className={`pdf-template 
                   w-[130rem] h-[1300px] md:w-full md:h-auto 
                   transform-gpu origin-top-left
@@ -386,22 +401,23 @@ const TemplateDetail = () => {
             </div>
           </main>
 
-<div className="mt-4 md:mt-6 flex justify-center">
-  <Button
-    onClick={handleDownload}
-    disabled={isDownloading}
-    className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 md:px-8 md:py-3 text-base md:text-lg w-full md:w-auto"
-    aria-label={`Download ${currentTemplate.name} biodata template as PDF`}
-  >
-    <Download className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-    {isDownloading ? 'Generating PDF...' : 'Download as PDF'}
-  </Button>
-</div>
-
+          <div className="mt-4 md:mt-6 flex justify-center">
+            <Button
+              onClick={handleDownload}
+              disabled={isDownloading}
+              className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 md:px-8 md:py-3 text-base md:text-lg w-full md:w-auto"
+              aria-label={`Download ${currentTemplate.name} biodata template as PDF`}
+            >
+              <Download className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+              {isDownloading ? 'Generating PDF...' : 'Download as PDF'}
+            </Button>
+          </div>
         </div>
       </div>
     </>
   );
-};
+});
+
+TemplateDetail.displayName = 'TemplateDetail';
 
 export default TemplateDetail;
