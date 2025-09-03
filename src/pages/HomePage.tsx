@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import{ memo, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import img1 from '/assets/template1Preview.webp';
 import img2 from '/assets/template2Preview.webp';
