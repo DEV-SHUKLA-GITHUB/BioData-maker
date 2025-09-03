@@ -1,6 +1,16 @@
-import { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  memo
+} from 'react';
 import { Helmet } from 'react-helmet';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import {
+  useParams,
+  useLocation,
+  useNavigate
+} from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Download, ArrowLeft } from 'lucide-react';
 import html2canvas from 'html2canvas';
@@ -12,13 +22,13 @@ import Template4 from './Template4';
 import Template5 from './Template5';
 import Template6 from './Template6';
 import Template7 from './Template7';
-import preview1 from "/assets/template1Preview.webp";
-import preview2 from "/assets/template2Preview.webp";
-import preview3 from "/assets/template3Preview.webp";
-import preview4 from "/assets/template4Preview.webp";
-import preview5 from "/assets/template5Preview.webp";
-import preview6 from "/assets/template6Preview.webp";
-import preview7 from "/assets/template7Preview.webp";
+import preview1 from '/assets/template1Preview.webp';
+import preview2 from '/assets/template2Preview.webp';
+import preview3 from '/assets/template3Preview.webp';
+import preview4 from '/assets/template4Preview.webp';
+import preview5 from '/assets/template5Preview.webp';
+import preview6 from '/assets/template6Preview.webp';
+import preview7 from '/assets/template7Preview.webp';
 
 interface TemplateData {
   id: number;
@@ -27,75 +37,200 @@ interface TemplateData {
   name: string;
   description: string;
   category: string;
+  designStyle: string;
+  community: string;
+  seoKeywords: string[];
 }
 
-// Memoized SEO Component
-const TemplateDetailSEO = memo(({ template }: { template: TemplateData | undefined }) => {
+// SEO Component for Template Detail
+const TemplateDetailSEO = memo(({ template }: { template?: TemplateData }) => {
   if (!template) return null;
 
-  const schemaData = useMemo(() => ({
+  const enhancedSchema = useMemo(() => ({
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": `${template.name} - Biodata Template`,
-    "description": `Preview and download the ${template.name} biodata template. ${template.description}`,
-    "url": `https://www.freebiodatagenerator.com/template-detail/${template.id}`,
-    "breadcrumb": {
+    "@type": ["WebPage", "CreativeWork"],
+    name: `${template.name} Marriage Biodata Template - Free Download PDF`,
+    alternateName: [
+      `${template.name} Biodata Template`,
+      `${template.category} Marriage Biodata`,
+      `${template.designStyle} Biodata Format`
+    ],
+    description: `Download ${template.name} marriage biodata template free. ${template.description} Professional PDF format with customizable fields. Perfect for ${template.community} matrimonial profiles.`,
+    url: `https://www.freebiodatagenerator.com/template-detail/${template.id}`,
+    category: [template.category, "Marriage", "Matrimonial", "Biodata Template"],
+    keywords: template.seoKeywords.join(", "),
+    creator: {
+      "@type": "Organization",
+      name: "Free Biodata Generator",
+      url: "https://www.freebiodatagenerator.com"
+    },
+    dateModified: new Date().toISOString(),
+    inLanguage: "en",
+    isAccessibleForFree: true,
+    usageInfo: "Free for personal matrimonial use",
+    audience: {
+      "@type": "Audience",
+      audienceType: "Marriage seekers, Matrimonial profiles"
+    },
+    about: {
+      "@type": "Thing",
+      name: "Marriage Biodata Template",
+      description: `${template.designStyle} biodata template for ${template.community} matrimonial purposes`
+    },
+    mainEntity: {
+      "@type": "DigitalDocument",
+      name: `${template.name} Biodata Template PDF`,
+      encodingFormat: "application/pdf",
+      genre: "Matrimonial Document",
+      downloadUrl: `https://www.freebiodatagenerator.com/download/${template.id}`,
+      fileFormat: "PDF"
+    },
+    breadcrumb: {
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://www.freebiodatagenerator.com" },
+        { "@type": "ListItem", position: 2, name: "Create Biodata", item: "https://www.freebiodatagenerator.com/create-biodata" },
+        { "@type": "ListItem", position: 3, name: "Templates", item: "https://www.freebiodatagenerator.com/templates" },
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://www.freebiodatagenerator.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Create Biodata",
-          "item": "https://www.freebiodatagenerator.com/create-biodata"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Templates",
-          "item": "https://www.freebiodatagenerator.com/templates"
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "name": template.name,
-          "item": `https://www.freebiodatagenerator.com/template-detail/${template.id}`
+          position: 4,
+          name: `${template.name} Template`,
+          item: `https://www.freebiodatagenerator.com/template-detail/${template.id}`
         }
       ]
+    },
+    potentialAction: {
+      "@type": "DownloadAction",
+      target: `https://www.freebiodatagenerator.com/template-detail/${template.id}`,
+      object: {
+        "@type": "DigitalDocument",
+        name: `${template.name} Biodata Template`
+      }
     }
   }), [template]);
 
+  const dynamicKeywords = useMemo(() => {
+    const base = [
+      `${template.name.toLowerCase()} biodata template`,
+      `${template.category.toLowerCase()} marriage biodata`,
+      `${template.designStyle.toLowerCase()} biodata format`,
+      `free ${template.name.toLowerCase()} template download`,
+      `${template.community.toLowerCase()} biodata template`,
+      "marriage biodata template PDF",
+      "matrimonial biodata download",
+      "wedding biodata format"
+    ];
+    return [...base, ...template.seoKeywords].join(", ");
+  }, [template]);
+
   return (
     <Helmet>
-      <title>{template.name} - Marriage Biodata Template</title>
+      <title>
+        {template.name} Biodata Template - Free Marriage Biodata Download PDF |{" "}
+        {template.category}
+      </title>
       <meta
         name="description"
-        content={`Preview and download the ${template.name} biodata template. ${template.description}`}
+        content={`Download ${template.name} marriage biodata template free. ${template.description} Professional PDF format with customizable fields. Perfect for ${template.community} matrimonial profiles. Instant download available.`}
+      />
+      <meta name="keywords" content={dynamicKeywords} />
+      <link
+        rel="canonical"
+        href={`https://www.freebiodatagenerator.com/template-detail/${template.id}`}
+      />
+
+      {/* Open Graph */}
+      <meta
+        property="og:title"
+        content={`${template.name} Marriage Biodata Template - Free Download`}
       />
       <meta
-        name="keywords"
-        content={`${template.name}, biodata template, marriage biodata, matrimonial profile, ${template.category}`}
+        property="og:description"
+        content={`Preview and download ${template.name} biodata template. ${template.description} Professional PDF format for matrimonial use.`}
       />
-      <link rel="canonical" href={`https://www.freebiodatagenerator.com/template-detail/${template.id}`} />
-      <meta property="og:title" content={`${template.name} - Biodata Template`} />
-      <meta property="og:description" content={`Preview the ${template.name} biodata template`} />
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://www.freebiodatagenerator.com/template-detail/${template.id}`} />
-      <meta property="og:image" content={`https://www.freebiodatagenerator.com${template.preview}`} />
+      <meta
+        property="og:url"
+        content={`https://www.freebiodatagenerator.com/template-detail/${template.id}`}
+      />
+      <meta
+        property="og:image"
+        content={`https://www.freebiodatagenerator.com${template.preview}`}
+      />
+      <meta property="og:image:alt" content={`${template.name} Template Preview`} />
+      <meta property="og:site_name" content="Free Biodata Generator" />
+
+      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={`${template.name} Template`} />
-      <meta name="twitter:description" content={template.description} />
-      <meta name="twitter:image" content={`https://www.freebiodatagenerator.com${template.preview}`} />
-      <meta name="robots" content="index, follow" />
-      <meta name="author" content="Marriage Biodata Maker" />
+      <meta
+        name="twitter:title"
+        content={`${template.name} Biodata Template - Free Download`}
+      />
+      <meta
+        name="twitter:description"
+        content={`${template.description} Download free PDF biodata template.`}
+      />
+      <meta
+        name="twitter:image"
+        content={`https://www.freebiodatagenerator.com${template.preview}`}
+      />
+      <meta name="twitter:image:alt" content={`${template.name} Template`} />
+
+      <meta name="robots" content="index, follow, max-image-preview:large" />
+      <meta name="author" content="Free Biodata Generator Team" />
+      <meta name="language" content="English" />
+      <meta name="distribution" content="global" />
+      <meta name="rating" content="general" />
+      <meta name="revisit-after" content="7 days" />
+
+      <meta name="template-category" content={template.category} />
+      <meta name="template-style" content={template.designStyle} />
+      <meta name="template-community" content={template.community} />
+
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+      <meta name="theme-color" content="#4F46E5" />
+
+      <link
+        rel="preload"
+        as="image"
+        href={template.preview}
+        type="image/webp"
+      />
+
       <script type="application/ld+json">
-        {JSON.stringify(schemaData)}
+        {JSON.stringify(enhancedSchema)}
+      </script>
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: `How to download ${template.name} biodata template?`,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: `Click Download to save the ${template.name} biodata template as a PDF.`
+              }
+            },
+            {
+              "@type": "Question",
+              name: `Is ${template.name} template suitable for ${template.community} marriages?`,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: `Yes, designed specifically for ${template.community} matrimonial purposes.`
+              }
+            },
+            {
+              "@type": "Question",
+              name: `Can I customize the ${template.name} biodata template?`,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: `Yes, you can customize all fields before downloading as PDF.`
+              }
+            }
+          ]
+        })}
       </script>
     </Helmet>
   );
@@ -103,313 +238,332 @@ const TemplateDetailSEO = memo(({ template }: { template: TemplateData | undefin
 
 TemplateDetailSEO.displayName = 'TemplateDetailSEO';
 
-// Memoized Breadcrumb Component
-const Breadcrumb = memo(({ template }: { template: TemplateData | undefined }) => {
+const Breadcrumb = memo(({ template }: { template?: TemplateData }) => {
   const navigate = useNavigate();
-
-  const handleHomeClick = useCallback(() => navigate('/'), [navigate]);
-  const handleCreateBiodataClick = useCallback(() => navigate('/create-biodata'), [navigate]);
-  const handleTemplatesClick = useCallback(() => navigate('/templates'), [navigate]);
+  const goHome = useCallback(() => navigate('/'), [navigate]);
+  const goCreate = useCallback(() => navigate('/create-biodata'), [navigate]);
+  const goTemplates = useCallback(() => navigate('/templates'), [navigate]);
 
   return (
-    <nav aria-label="Breadcrumb navigation" className="mb-4 md:mb-6">
+    <nav
+      aria-label="Biodata template navigation breadcrumb"
+      className="mb-4 md:mb-6"
+    >
       <ol className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-gray-600 flex-wrap">
         <li>
-          <button onClick={handleHomeClick} className="hover:text-pink-600 transition-colors">
+          <button onClick={goHome} aria-label="Navigate to home page">
             Home
           </button>
         </li>
         <li className="flex items-center space-x-1 md:space-x-2">
           <span>/</span>
-          <button onClick={handleCreateBiodataClick} className="hover:text-pink-600 transition-colors">
+          <button
+            onClick={goCreate}
+            aria-label="Navigate to create biodata page"
+          >
             Create Biodata
           </button>
         </li>
         <li className="flex items-center space-x-1 md:space-x-2">
           <span>/</span>
-          <button onClick={handleTemplatesClick} className="hover:text-pink-600 transition-colors">
+          <button
+            onClick={goTemplates}
+            aria-label="Navigate to templates gallery"
+          >
             Templates
           </button>
         </li>
         <li className="flex items-center space-x-1 md:space-x-2">
           <span>/</span>
-          <span className="text-gray-900 font-medium truncate">
-            {template?.name || 'Template Detail'}
+          <span
+            className="text-gray-900 font-medium truncate"
+            aria-current="page"
+          >
+            {template?.name || 'Template Detail'} Biodata Template
           </span>
         </li>
       </ol>
     </nav>
   );
 });
-
 Breadcrumb.displayName = 'Breadcrumb';
 
-// Memoized Mobile Alert Component
-const MobileAlert = memo(() => (
-  <div className="block md:hidden w-full my-3">
-    <div className="bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 text-sm rounded-md px-4 py-2 shadow-sm">
-      The borders may not appear correctly in the preview, but your downloaded PDF will have everything properly formatted.
-    </div>
-  </div>
-));
-
-MobileAlert.displayName = 'MobileAlert';
-
-// Memoized CSS Styles Component
 const StylesComponent = memo(() => (
   <Helmet>
     <style type="text/css">{`
-      @media (max-width: 768px) {
-        .pdf-template * {
-          pointer-events: none;
-        }
-        .pdf-template {
-          font-size: inherit !important;
-          line-height: inherit !important;
-        }
-        .pdf-template img,
-        .pdf-template [style*="background"] {
-          display: block !important;
-          visibility: visible !important;
-        }
-        .template-container {
-          overflow-x: auto;
-          overflow-y: hidden;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        .template-container::-webkit-scrollbar {
-          display: none;
-        }
-        .downloading .pdf-template {
-          padding-left: 0 !important;
-          padding-top: 0 !important;
-          padding-inline-start: 0 !important;
-        }
+      @media (max-width:768px){
+        .pdf-template *{pointer-events:none}
+        .template-container{overflow-x:auto}
       }
     `}</style>
   </Helmet>
 ));
-
 StylesComponent.displayName = 'StylesComponent';
 
 const TemplateDetail = memo(() => {
-  const { templateId } = useParams<{ templateId: string }>();
-  const location = useLocation();
+  const { templateId } =
+    useParams<{ templateId: string }>();
+  const { state } = useLocation();
+  const { formData } = (state as any) || {};
   const navigate = useNavigate();
-  const { formData } = location.state as { formData: any } || {};
 
-  const [isDownloading, setIsDownloading] = useState(false);
-
-  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Redirect if no form data
   useEffect(() => {
-    if (!formData) {
-      navigate('/create-biodata');
-    }
+    if (!formData) navigate('/create-biodata');
   }, [formData, navigate]);
 
-  // Memoized templates array to prevent recreation
-  const templates: TemplateData[] = useMemo(() => [
-    {
-      id: 1,
-      component: <Template3 formData={formData} />,
-      preview: preview1,
-      name: "Classic Professional",
-      description: "Clean and professional design perfect for traditional families",
-      category: "Professional"
-    },
-    {
-      id: 2,
-      component: <Template7 formData={formData} />,
-      preview: preview7,
-      name: "Modern Elegant",
-      description: "Contemporary design with elegant typography and layout",
-      category: "Modern"
-    },
-    {
-      id: 3,
-      component: <Template4 formData={formData} />,
-      preview: preview4,
-      name: "Traditional Heritage",
-      description: "Traditional Indian design with cultural elements",
-      category: "Traditional"
-    },
-    {
-      id: 4,
-      component: <Template6 formData={formData} />,
-      preview: preview6,
-      name: "Minimalist Style",
-      description: "Simple and clean design focusing on essential information",
-      category: "Minimalist"
-    },
-    {
-      id: 5,
-      component: <Template5 formData={formData} />,
-      preview: preview5,
-      name: "Floral Design",
-      description: "Beautiful floral patterns perfect for wedding biodata",
-      category: "Decorative"
-    },
-    {
-      id: 6,
-      component: <Template1 formData={formData} />,
-      preview: preview2,
-      name: "Royal Classic",
-      description: "Luxurious design with royal elements and gold accents",
-      category: "Luxury"
-    },
-    {
-      id: 7,
-      component: <Template2 formData={formData} />,
-      preview: preview3,
-      name: "Contemporary Chic",
-      description: "Modern chic design with sophisticated typography",
-      category: "Contemporary"
-    },
-  ], [formData]);
+  const templates: TemplateData[] = useMemo(
+    () => [
+      {
+        id: 1,
+        component: <Template3 formData={formData} />,
+        preview: preview1,
+        name: 'Classic Professional',
+        description:
+          'Clean and professional design perfect for traditional families',
+        category: 'Professional',
+        designStyle: 'Professional',
+        community: 'Traditional',
+        seoKeywords: [
+          'clean professional design',
+          'traditional family biodata',
+          'formal biodata layout',
+          'corporate style biodata'
+        ]
+      },
+      {
+        id: 2,
+        component: <Template7 formData={formData} />,
+        preview: preview7,
+        name: 'Modern Elegant',
+        description: 'Contemporary design with elegant typography',
+        category: 'Modern',
+        designStyle: 'Contemporary',
+        community: 'Modern',
+        seoKeywords: [
+          'contemporary biodata design',
+          'elegant typography biodata',
+          'modern matrimonial template',
+          'stylish biodata format'
+        ]
+      },
+      {
+        id: 3,
+        component: <Template4 formData={formData} />,
+        preview: preview4,
+        name: 'Traditional Heritage',
+        description: 'Traditional Indian design with cultural elements',
+        category: 'Traditional',
+        designStyle: 'Traditional',
+        community: 'Indian',
+        seoKeywords: [
+          'traditional Indian biodata',
+          'cultural biodata elements',
+          'heritage biodata design',
+          'ethnic biodata template'
+        ]
+      },
+      {
+        id: 4,
+        component: <Template6 formData={formData} />,
+        preview: preview6,
+        name: 'Minimalist Style',
+        description:
+          'Simple and clean design focusing on essential information',
+        category: 'Minimalist',
+        designStyle: 'Minimalist',
+        community: 'Contemporary',
+        seoKeywords: [
+          'minimalist biodata design',
+          'simple biodata template',
+          'clean biodata format',
+          'minimal matrimonial template'
+        ]
+      },
+      {
+        id: 5,
+        component: <Template5 formData={formData} />,
+        preview: preview5,
+        name: 'Floral Design',
+        description: 'Beautiful floral patterns perfect for wedding biodata',
+        category: 'Decorative',
+        designStyle: 'Decorative',
+        community: 'Traditional',
+        seoKeywords: [
+          'floral biodata template',
+          'decorative marriage biodata',
+          'wedding biodata with flowers',
+          'ornamental biodata format'
+        ]
+      },
+      {
+        id: 6,
+        component: <Template1 formData={formData} />,
+        preview: preview2,
+        name: 'Royal Classic',
+        description:
+          'Luxurious design with royal elements and gold accents',
+        category: 'Luxury',
+        designStyle: 'Luxury',
+        community: 'Traditional',
+        seoKeywords: [
+          'royal biodata template',
+          'luxury marriage biodata',
+          'gold accent biodata',
+          'premium biodata design'
+        ]
+      },
+      {
+        id: 7,
+        component: <Template2 formData={formData} />,
+        preview: preview3,
+        name: 'Contemporary Chic',
+        description:
+          'Modern chic design with sophisticated typography',
+        category: 'Contemporary',
+        designStyle: 'Chic',
+        community: 'Urban',
+        seoKeywords: [
+          'contemporary biodata design',
+          'chic marriage biodata',
+          'sophisticated biodata template',
+          'stylish contemporary format'
+        ]
+      }
+    ],
+    [formData]
+  );
 
-  // Memoized current template
-  const currentTemplate = useMemo(() =>
-    templates.find(t => t.id === parseInt(templateId || '0')),
+  const current = useMemo(
+    () => templates.find(
+      (t) => t.id === parseInt(templateId || '0')
+    ),
     [templates, templateId]
   );
 
-  // Memoized download handler
+  const [isDownloading, setIsDownloading] =
+    useState(false);
+
   const handleDownload = useCallback(async () => {
-    if (!currentTemplate) return;
-
+    if (!current) return;
     setIsDownloading(true);
-
-    // Wait for DOM update
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    const element = document.getElementById(`template-${currentTemplate.id}`);
-
-    if (element) {
+    await new Promise((r) => setTimeout(r, 100));
+    const el = document.getElementById(
+      `template-${current.id}`
+    );
+    if (el) {
       try {
-        const canvas = await html2canvas(element, {
+        const canvas = await html2canvas(el, {
           scale: 2,
           useCORS: true,
-          allowTaint: true,
-          backgroundColor: null,
-          logging: false,
-          onclone: (clonedDoc) => {
-            const clonedElement = clonedDoc.getElementById(`template-${currentTemplate.id}`);
-            if (clonedElement) {
-              clonedElement.style.width = '1000px';
-              clonedElement.style.height = '1400px';
-              clonedElement.style.paddingLeft = '0';
-              clonedElement.style.paddingTop = '0';
-              clonedElement.style.transform = 'none';
-              clonedElement.style.scale = '1';
-              clonedElement.style.margin = '0';
-              clonedElement.classList.remove('ps-[8rem]', 'pt-[55rem]');
-            }
-          }
+          backgroundColor: null
         });
-
-        const imgWidth = 210;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
+        const imgData = canvas.toDataURL(
+          'image/jpeg',
+          1.0
+        );
         const pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
           format: 'a4'
         });
-
-        const imgData = canvas.toDataURL('image/jpeg', 1.0);
-        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-        pdf.save(`${currentTemplate.name.toLowerCase().replace(/\s+/g, '-')}-biodata.pdf`);
-      } catch (error) {
-        console.error('Error generating PDF:', error);
-        alert('Error generating PDF. Please try again.');
+        const imgWidth = 210;
+        const imgHeight =
+          (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(
+          imgData,
+          'JPEG',
+          0,
+          0,
+          imgWidth,
+          imgHeight
+        );
+        pdf.save(
+          `${current.name
+            .toLowerCase()
+            .replace(/\s+/g, '-')}-biodata.pdf`
+        );
+      } catch (e) {
+        console.error(e);
+        alert(
+          'Error generating PDF. Please try again.'
+        );
       } finally {
         setIsDownloading(false);
       }
     }
-  }, [currentTemplate]);
+  }, [current]);
 
-  // Memoized back to templates handler
-  const handleBackToTemplates = useCallback(() => {
+  const backToTemplates = useCallback(() => {
     navigate('/templates', { state: { formData } });
   }, [navigate, formData]);
 
-  // Early return if no data
-  if (!formData || !currentTemplate) {
-    return null;
-  }
+  if (!formData || !current) return null;
 
   return (
     <>
       <StylesComponent />
-      
       <div className="min-h-screen bg-gray-50 p-2 md:p-8">
-        <TemplateDetailSEO template={currentTemplate} />
-
+        <TemplateDetailSEO template={current} />
         <div className="max-w-6xl mx-auto">
-          <Breadcrumb template={currentTemplate} />
+          <Breadcrumb template={current} />
 
-          {/* Header Section */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-6 gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
             <Button
-              onClick={handleBackToTemplates}
-              className="text-white bg-gray-800 hover:bg-gray-700 text-sm md:text-base px-3 py-2 md:px-4 md:py-2"
+              onClick={backToTemplates}
+              className="text-white bg-gray-800 hover:bg-gray-700 px-4 py-2"
               aria-label="Back to templates gallery"
             >
-              <ArrowLeft className="mr-2 h-3 w-3 md:h-4 md:w-4" />
+              <ArrowLeft className="mr-2" />
               Back to Templates
             </Button>
 
             <div className="text-left md:text-right">
-              <h1 className="text-lg md:text-2xl font-bold text-gray-800">
-                {currentTemplate.name}
+              <h1 className="text-2xl font-bold text-gray-800">
+                {current.name} Marriage Biodata Template
               </h1>
-              <p className="text-sm md:text-base text-gray-600">
-                {currentTemplate.description}
+              <p className="text-base text-gray-600">
+                {current.description} –{' '}
+                {current.category}{' '}
+                {current.designStyle} Design
+              </p>
+              <p className="text-sm text-gray-500 mt-1">
+                Free PDF Download •{' '}
+                {current.community} Community •
+                Customizable Format
               </p>
             </div>
           </div>
 
-          <MobileAlert />
-
-          <main className={`bg-white rounded-lg shadow-lg overflow-hidden template-container ${isDownloading ? 'downloading' : ''}`}>
+          <main
+            className={`bg-white rounded-lg shadow-lg overflow-hidden template-container ${
+              isDownloading ? 'downloading' : ''
+            }`}
+          >
             <div className="md:p-4">
               <div
-                id={`template-${currentTemplate.id}`}
-                className={`pdf-template 
-                  w-[130rem] h-[1300px] md:w-full md:h-auto 
-                  transform-gpu origin-top-left
-                  scale-[0.4] md:scale-100
-                  -mx-[240px] -my-[336px] md:mx-0 md:my-0
-                  overflow-visible
-                  print:w-[210mm] print:h-[297mm] print:scale-100 print:mx-0 print:my-0
-                  ${!isDownloading ? "max-md:pl-[30rem] max-md:w-[101rem] max-md:h-[76rem] max-md:pt-[55rem]" : ""}`}
-                style={{
-                  paddingLeft: isDownloading ? '0' : undefined,
-                  paddingTop: isDownloading ? '0' : undefined,
-                  paddingInlineStart: isDownloading ? '0' : undefined,
-                }}
+                id={`template-${current.id}`}
+                className={`pdf-template w-[130rem] h-[1300px] md:w-full md:h-auto transform scale-[0.4] md:scale-100 -mx-[240px] -my-[336px] md:mx-0 md:my-0 overflow-visible print:scale-100`}
               >
-                {currentTemplate.component}
+                {current.component}
               </div>
             </div>
           </main>
 
-          <div className="mt-4 md:mt-6 flex justify-center">
+          <div className="mt-6 flex justify-center">
             <Button
               onClick={handleDownload}
               disabled={isDownloading}
-              className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 md:px-8 md:py-3 text-base md:text-lg w-full md:w-auto"
-              aria-label={`Download ${currentTemplate.name} biodata template as PDF`}
+              className="bg-blue-600 text-white hover:bg-blue-700 px-8 py-3"
+              aria-label={`Download ${current.name} Template PDF for ${current.community} matrimonial use`}
             >
-              <Download className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-              {isDownloading ? 'Generating PDF...' : 'Download as PDF'}
+              <Download className="mr-2" />
+              {isDownloading
+                ? 'Generating PDF...'
+                : `Download ${current.name} PDF`}
             </Button>
           </div>
         </div>
@@ -419,5 +573,4 @@ const TemplateDetail = memo(() => {
 });
 
 TemplateDetail.displayName = 'TemplateDetail';
-
 export default TemplateDetail;

@@ -91,29 +91,33 @@ const HEIGHT_OPTIONS: string[] = (() => {
     return options;
 })();
 
-// Memoized SEO Component
 const BiodataFormSEO = memo(() => {
     const schemaData = useMemo(() => ({
         "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Create Marriage Biodata - Biodata Maker Form",
-        "description": "Fill in your personal details to create a professional marriage biodata. Easy form with customizable fields for matrimonial profiles.",
+        "@type": "WebApplication",
+        "name": "Create Marriage Biodata Online - Free Biodata Maker Form",
+        "description": "Fill personal, family, and contact details to create professional marriage biodata. Easy form with photo upload, customizable fields, instant biodata generation.",
         "url": "https://www.freebiodatagenerator.com/create-biodata",
+        "applicationCategory": "UtilityApplication",
+        "featureList": [
+            "Personal details form with validation",
+            "Family information fields",
+            "Contact details section",
+            "Photo upload functionality",
+            "Customizable field labels",
+            "Drag and drop field reordering",
+            "Add/remove custom fields",
+            "Real-time form preview",
+            "Step-by-step form progress",
+            "Multi-language support",
+            "Form data persistence",
+            "Mobile responsive form"
+        ],
         "breadcrumb": {
             "@type": "BreadcrumbList",
             "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Home",
-                    "item": "https://www.freebiodatagenerator.com"
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "Create Biodata",
-                    "item": "https://www.freebiodatagenerator.com/create-biodata"
-                }
+                { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.freebiodatagenerator.com" },
+                { "@type": "ListItem", "position": 2, "name": "Create Biodata", "item": "https://www.freebiodatagenerator.com/create-biodata" }
             ]
         },
         "mainEntity": {
@@ -121,18 +125,26 @@ const BiodataFormSEO = memo(() => {
             "mainEntity": [
                 {
                     "@type": "Question",
-                    "name": "What information do I need to create a biodata?",
+                    "name": "How do I fill the marriage biodata form?",
                     "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "You need personal details like name, date of birth, education, occupation, family information, and contact details."
+                        "text": "Fill your personal, family, and contact details, upload a photo, and reorder fields to generate your biodata instantly."
                     }
                 },
                 {
                     "@type": "Question",
-                    "name": "Can I customize the biodata fields?",
+                    "name": "What details should be included in a marriage biodata?",
                     "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "Yes, you can add custom fields, edit field labels, and reorder fields according to your preferences."
+                        "text": "Include your name, date of birth, place of birth, education, occupation, family details, contact info, and a professional photo."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I add custom fields to the biodata?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, you can add custom fields, drag to reorder, and change field labels as per your requirements."
                     }
                 }
             ]
@@ -141,32 +153,26 @@ const BiodataFormSEO = memo(() => {
 
     return (
         <Helmet>
-            <title>Create Marriage Biodata - Professional Biodata Maker Form</title>
-            <meta
-                name="description"
-                content="Create your professional marriage biodata with our easy-to-use form. Fill personal details, family information, and contact details to generate a beautiful biodata."
-            />
-            <meta
-                name="keywords"
-                content="create biodata, marriage biodata form, matrimonial profile, biodata maker, wedding biodata, personal details form"
-            />
+            <title>Create Marriage Biodata Online - Free Biodata Form | Personal Details</title>
+            <meta name="description" content="Fill personal, family, and contact details to create marriage biodata online. Photo upload, customizable fields, drag-and-drop reordering, mobile friendly biodata form." />
+            <meta name="keywords" content="create marriage biodata, marriage biodata form, biodata maker form, biodata creation form, fill biodata details, matrimonial profile form, biodata template, biodata form with photo" />
             <link rel="canonical" href="https://www.freebiodatagenerator.com/create-biodata" />
-            <meta property="og:title" content="Create Marriage Biodata - Professional Biodata Maker Form" />
-            <meta property="og:description" content="Create your professional marriage biodata with our easy-to-use form. Fill personal details and generate a beautiful biodata." />
+            {/* Open Graph for social sharing */}
+            <meta property="og:title" content="Create Marriage Biodata Online - Free Biodata Form" />
+            <meta property="og:description" content="Fill personal, family, and contact details, upload a photo, and create your professional marriage biodata instantly." />
             <meta property="og:type" content="website" />
             <meta property="og:url" content="https://www.freebiodatagenerator.com/create-biodata" />
             <meta property="og:image" content="https://www.freebiodatagenerator.com/biodata-form-preview.jpg" />
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content="Create Marriage Biodata - Professional Biodata Maker Form" />
-            <meta name="twitter:description" content="Create your professional marriage biodata with our easy-to-use form" />
+            <meta name="twitter:title" content="Create Marriage Biodata Online - Free Biodata Form" />
+            <meta name="twitter:description" content="Fill personal, family, and contact details, upload a photo, and create your professional marriage biodata instantly." />
             <meta name="twitter:image" content="https://www.freebiodatagenerator.com/biodata-form-preview.jpg" />
-            <meta name="robots" content="index, follow" />
-            <meta name="author" content="Marriage Biodata Maker" />
+            <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+            <meta name="author" content="Free Biodata Generator Team" />
             <meta name="language" content="en" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <script type="application/ld+json">
-                {JSON.stringify(schemaData)}
-            </script>
+            <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+            <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
         </Helmet>
     );
 });
