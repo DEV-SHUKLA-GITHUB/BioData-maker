@@ -1,4 +1,3 @@
-// import { motion} from 'framer-motion';
 import { Heart } from 'lucide-react';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 

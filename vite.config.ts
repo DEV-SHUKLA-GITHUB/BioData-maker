@@ -44,7 +44,6 @@ export default defineConfig({
         manualChunks: {
           'react-core': ['react', 'react-dom'],
           'react-router': ['react-router-dom'],
-          'ui-heavy': ['framer-motion'],
           'ui-light': ['lucide-react', 'react-icons'],
           // Only include react-hook-form if it's actually installed and used
           // 'forms': ['react-hook-form', 'react-datepicker'],
@@ -76,7 +75,6 @@ export default defineConfig({
     exclude: [
       'jspdf',
       'html2canvas',
-      'framer-motion',
     ],
   },
 })

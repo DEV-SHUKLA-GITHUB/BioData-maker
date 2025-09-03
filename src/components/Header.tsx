@@ -1,6 +1,5 @@
 // components/Header.tsx
 import React, { useState, useCallback } from 'react';
-// import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Menu, X } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import logo from "/assets/logo2.webp";
