@@ -1,13 +1,10 @@
-// import { motion } from 'framer-motion';
-import React, {useState,useCallback, useMemo } from 'react';
-import img1 from '../../../public/assets/template1Preview.webp';
-import img2 from '../../../public/assets/template2Preview.webp';
-import img3 from '../../../public/assets/template7Preview.webp';
-// import img4 from '../../public/assets/template4Preview.webp';
-import img5 from '../../../public/assets/template5Preview.webp';
-const TemplateExamples: React.FC = () => {
-  // const navigate = useNavigate();
+import React, { useState, useCallback, useMemo } from 'react';
+import img1 from '/assets/template1Preview.webp';
+import img2 from '/assets/template2Preview.webp';
+import img3 from '/assets/template7Preview.webp';
+import img5 from '/assets/template5Preview.webp';
 
+const TemplateExamples: React.FC = () => {
   const templates = useMemo(() => [
     {
       image: img1,
@@ -34,58 +31,57 @@ const TemplateExamples: React.FC = () => {
       category: "Minimalist"
     },
   ], []);
-const OptimizedImage: React.FC<{
-  src: string;
-  alt: string;
-  className?: string;
-  loading?: 'lazy' | 'eager';
-}> = ({ src, alt, className = '', loading = 'lazy' }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
-  const handleLoad = useCallback(() => {
-    setImageLoaded(true);
-  }, []);
+  const OptimizedImage: React.FC<{
+    src: string;
+    alt: string;
+    className?: string;
+    loading?: 'lazy' | 'eager';
+  }> = ({ src, alt, className = '', loading = 'lazy' }) => {
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
-  const handleError = useCallback(() => {
-    setImageError(true);
-    setImageLoaded(true);
-  }, []);
+    const handleLoad = useCallback(() => {
+      setImageLoaded(true);
+    }, []);
 
-  return (
-    <div className={`relative overflow-hidden ${className}`}>
-      {!imageLoaded && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded"></div>
-      )}
+    const handleError = useCallback(() => {
+      setImageError(true);
+      setImageLoaded(true);
+    }, []);
 
-      <img
-        src={src}
-        alt={alt}
-        loading={loading}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'
+    return (
+      <div className={`relative overflow-hidden ${className}`}>
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-200 animate-pulse rounded"></div>
+        )}
+
+        <img
+          src={src}
+          alt={alt}
+          loading={loading}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
-        onLoad={handleLoad}
-        onError={handleError}
-      />
+          onLoad={handleLoad}
+          onError={handleError}
+          width="300"
+          height="400"
+        />
 
-      {imageError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500 text-sm">
-          Failed to load image
-        </div>
-      )}
-    </div>
-  );
-};
-  // const handlePreviewTemplate = useCallback(() => {
-  //   navigate('/template');
-  // }, [navigate]);
+        {imageError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500 text-sm">
+            Failed to load image
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <section className="py-16 lg:py-24 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             Beautiful Marriage Biodata Templates
           </h2>
@@ -95,11 +91,10 @@ const OptimizedImage: React.FC<{
           </p>
         </div>
 
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          {templates.map((template) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {templates.map((template, index) => (
             <article
+              key={index}
               className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
             >
               <div className="relative overflow-hidden">
@@ -117,12 +112,6 @@ const OptimizedImage: React.FC<{
               <div className="p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">{template.title}</h3>
                 <p className="text-sm text-gray-600 mb-3">{template.description}</p>
-                {/* <button 
-                  onClick={handlePreviewTemplate}
-                  className="w-full bg-gray-100 text-gray-800 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
-                >
-                  Preview Template
-                </button> */}
               </div>
             </article>
           ))}
@@ -132,4 +121,4 @@ const OptimizedImage: React.FC<{
   );
 };
 
-export default TemplateExamples
+export default TemplateExamples;

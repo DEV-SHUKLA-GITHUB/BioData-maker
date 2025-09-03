@@ -1,6 +1,6 @@
 import React from 'react';
-import bg from "../../public/assets/bg2.jpg";
-import icon from "../../public/assets/ganesha.webp"
+import bg from "/assets/bg2.jpg";
+import icon from "/assets/ganesha.webp"
 
 interface FormData {
   PersonalDetails?: Record<string, string>;

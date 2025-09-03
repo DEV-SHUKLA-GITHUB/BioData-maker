@@ -1,4 +1,3 @@
-// import { motion } from 'framer-motion';
 import React, { useMemo } from 'react';
 import { FileText, Download, Paintbrush } from 'lucide-react';
 
@@ -23,25 +22,11 @@ const Features: React.FC = () => {
       color: "bg-green-500"
     }
   ], []);
-// const fadeInUp = {
-//   initial: { opacity: 0, y: 30 },
-//   animate: { opacity: 1, y: 0 },
-//   transition: { duration: 0.6 }
-// };
 
-// const staggerChildren = {
-//   animate: {
-//     transition: {
-//       staggerChildren: 0.1
-//     }
-//   }
-// };
   return (
     <section className="py-16 lg:py-24 bg-white">
       <div className="container mx-auto px-4">
-        <div
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             Why Choose Our Marriage Biodata Maker
           </h2>
@@ -51,16 +36,13 @@ const Features: React.FC = () => {
           </p>
         </div>
 
-        <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
-          {features.map((feature) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
             <article
+              key={index}
               className="text-center p-6 rounded-xl hover:shadow-lg transition-shadow"
             >
-              <div
-                className={`w-16 h-16 mx-auto mb-4 ${feature.color} rounded-full flex items-center justify-center`}
-              >
+              <div className={`w-16 h-16 mx-auto mb-4 ${feature.color} rounded-full flex items-center justify-center`}>
                 <feature.icon className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900">{feature.title}</h3>
@@ -73,4 +55,4 @@ const Features: React.FC = () => {
   );
 };
 
-export default Features
+export default Features;

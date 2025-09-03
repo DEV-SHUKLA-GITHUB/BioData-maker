@@ -4,8 +4,8 @@ const urlsToCache = [
   '/',
   '/static/js/bundle.js',
   '/static/css/main.css',
-  '/assets/template1Preview.webp',
-  '/assets/template2Preview.webp'
+  '/public/assets/template1Preview.webp',
+  '/public/assets/template2Preview.webp'
 ];
 
 self.addEventListener('install', (event) => {

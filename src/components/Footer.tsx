@@ -1,4 +1,4 @@
-import { motion} from 'framer-motion';
+// import { motion} from 'framer-motion';
 import { Heart } from 'lucide-react';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 
@@ -8,11 +8,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-900 text-white py-12">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
           className="text-center"
         >
           <div className="flex justify-center mb-6">
@@ -58,7 +54,7 @@ const Footer: React.FC = () => {
               Contact us: freebiodatagenerator@gmail.com
             </p>
           </div>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );

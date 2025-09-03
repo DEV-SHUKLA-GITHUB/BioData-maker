@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import bg from "../../public/assets/bg1.jpg";
+import bg from "/assets/bg1.jpg";
 
 interface FormData {
   PersonalDetails?: Record<string, string>;

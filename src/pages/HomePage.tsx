@@ -1,18 +1,17 @@
-// pages/HomePage.tsx
-import React, { useEffect } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import img1 from '../../public/assets/template1Preview.webp';
-import img2 from '../../public/assets/template2Preview.webp';
-import img3 from '../../public/assets/template7Preview.webp';
+import img1 from '/assets/template1Preview.webp';
+import img2 from '/assets/template2Preview.webp';
+import img3 from '/assets/template7Preview.webp';
 import HeroSection from '../components/homepage/Hero';
 import TemplateExamples from '../components/homepage/TemplateExamples';
 import Features from '../components/homepage/Features';
 import Testimonials from '../components/homepage/Testimonials';
 import FAQs from '../components/homepage/FAQ';
-const preloadImages = [img1, img2, img3];
 
-const HomepageSEO: React.FC = () => {
-  const schemaData = {
+// Memoized SEO component to prevent unnecessary re-renders
+const HomepageSEO = memo(() => {
+  const schemaData = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Marriage Biodata Maker",
@@ -38,7 +37,9 @@ const HomepageSEO: React.FC = () => {
       "Customizable fields"
     ],
     "screenshot": "https://www.freebiodatagenerator.com/screenshot.jpg"
-  };
+  }), []);
+
+  const preloadImages = useMemo(() => [img1, img2, img3], []);
 
   return (
     <Helmet>
@@ -53,9 +54,9 @@ const HomepageSEO: React.FC = () => {
       />
       <link rel="canonical" href="https://www.freebiodatagenerator.com" />
 
-      {/* Preload critical resources */}
+      {/* Preload critical images only */}
       {preloadImages.map((src, index) => (
-        <link key={index} rel="preload" as="image" href={src} />
+        <link key={index} rel="preload" as="image" href={src} type="image/webp" />
       ))}
 
       {/* Open Graph Tags */}
@@ -72,11 +73,12 @@ const HomepageSEO: React.FC = () => {
       <meta name="twitter:description" content="Create professional marriage biodata with beautiful templates" />
       <meta name="twitter:image" content="https://www.freebiodatagenerator.com/twitter-image.jpg" />
 
-      {/* Additional SEO Tags */}
+      {/* Performance and SEO optimizations */}
       <meta name="robots" content="index, follow" />
       <meta name="author" content="Marriage Biodata Maker" />
       <meta name="language" content="en" />
-      <meta name="revisit-after" content="7 days" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 
       {/* Structured Data */}
       <script type="application/ld+json">
@@ -84,40 +86,23 @@ const HomepageSEO: React.FC = () => {
       </script>
     </Helmet>
   );
-};
+});
 
-const Homepage: React.FC = () => {
-  useEffect(() => {
-    const preloadImage = (src: string) => {
-      return new Promise<void>((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve();
-        img.onerror = () => reject();
-        img.src = src;
-      });
-    };
+HomepageSEO.displayName = 'HomepageSEO';
 
-    const imagePromises = preloadImages.map(preloadImage);
-
-    Promise.all(imagePromises)
-      .then(() => {
-        console.log('Critical images preloaded successfully');
-      })
-      .catch(error => {
-        console.error('Error preloading images:', error);
-      });
-  }, []);
-
+const Homepage = memo(() => {
   return (
     <div className="min-h-screen">
       <HomepageSEO />
-      <HeroSection/>
+      <HeroSection />
       <TemplateExamples />
       <Features />
       <Testimonials />
       <FAQs />
     </div>
   );
-};
+});
+
+Homepage.displayName = 'Homepage';
 
 export default Homepage;

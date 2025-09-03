@@ -1,6 +1,5 @@
-// import { motion, } from 'framer-motion';
 import React, { useMemo } from 'react';
-import { Star} from 'lucide-react';
+import { Star } from 'lucide-react';
 
 const Testimonials: React.FC = () => {
   const testimonials = useMemo(() => [
@@ -27,9 +26,7 @@ const Testimonials: React.FC = () => {
   return (
     <section className="py-16 lg:py-24 bg-white">
       <div className="container mx-auto px-4">
-        <div
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             What Our Users Say
           </h2>
@@ -38,11 +35,10 @@ const Testimonials: React.FC = () => {
           </p>
         </div>
 
-        <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
-          {testimonials.map((testimonial) => (
-            <div
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <article
+              key={index}
               className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center mb-4">
@@ -62,7 +58,7 @@ const Testimonials: React.FC = () => {
                   <p className="text-sm text-gray-500">{testimonial.location}</p>
                 </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>
@@ -70,4 +66,4 @@ const Testimonials: React.FC = () => {
   );
 };
 
-export default Testimonials
+export default Testimonials;

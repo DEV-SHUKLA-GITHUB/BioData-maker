@@ -1,5 +1,5 @@
 import React from 'react';
-import bg from "../../public/assets/bg6.webp";
+import bg from "/assets/bg6.webp";
 
 interface FormData {
   PersonalDetails?: Record<string, string>;

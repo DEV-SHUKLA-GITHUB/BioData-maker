@@ -1,5 +1,4 @@
-// import { motion,AnimatePresence } from 'framer-motion';
-import React, {useState,useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { HelpCircle, ChevronDown } from 'lucide-react';
 
 const FAQs: React.FC = () => {
@@ -31,9 +30,7 @@ const FAQs: React.FC = () => {
   return (
     <section className="py-16 lg:py-24 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             Frequently Asked Questions
           </h2>
@@ -44,9 +41,7 @@ const FAQs: React.FC = () => {
 
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
-            <div
-              className="mb-4"
-            >
+            <div className="mb-4" key={index}>
               <button
                 onClick={() => toggleFAQ(index)}
                 className="w-full bg-white rounded-lg shadow-md p-6 text-left hover:shadow-lg transition-shadow flex items-center justify-between"
@@ -55,21 +50,16 @@ const FAQs: React.FC = () => {
                   <HelpCircle className="w-6 h-6 text-pink-500 flex-shrink-0" />
                   <h3 className="font-semibold text-gray-900">{faq.question}</h3>
                 </div>
-                <div
-                >
-                  <ChevronDown className="w-5 h-5 text-gray-500" />
-                </div>
+                <ChevronDown className="w-5 h-5 text-gray-500" />
               </button>
 
-                {openIndex === index && (
-                  <div
-                    className="overflow-hidden"
-                  >
-                    <div className="bg-white px-6 pb-6 pt-2 ml-6 border-l-2 border-pink-500">
-                      <p className="text-gray-600">{faq.answer}</p>
-                    </div>
+              {openIndex === index && (
+                <div className="overflow-hidden">
+                  <div className="bg-white px-6 pb-6 pt-2 ml-6 border-l-2 border-pink-500">
+                    <p className="text-gray-600">{faq.answer}</p>
                   </div>
-                )}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -78,4 +68,4 @@ const FAQs: React.FC = () => {
   );
 };
 
-export default FAQs
+export default FAQs;
