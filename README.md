@@ -106,4 +106,4 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 If you find this project useful, feel free to ⭐ **star** the repository and share it with your friends. For any questions or feedback, create an *Issue* or reach out on [LinkedIn](https://www.linkedin.com/in/yourprofile). We’d love to hear from you! 💬
 
-Made with ❤️ using *React* & *Tailwind CSS*. Happy biodata building!
+Made with ❤️. Create your perfect biodata today!
