@@ -29,7 +29,7 @@ import preview4 from '/assets/template4Preview.webp';
 import preview5 from '/assets/template5Preview.webp';
 import preview6 from '/assets/template6Preview.webp';
 import preview7 from '/assets/template7Preview.webp';
-
+import { track } from '@vercel/analytics';
 interface TemplateData {
   id: number;
   component: JSX.Element;
@@ -447,55 +447,48 @@ const TemplateDetail = memo(() => {
   const [isDownloading, setIsDownloading] =
     useState(false);
 
-  const handleDownload = useCallback(async () => {
-    if (!current) return;
-    setIsDownloading(true);
-    await new Promise((r) => setTimeout(r, 100));
-    const el = document.getElementById(
-      `template-${current.id}`
-    );
-    if (el) {
-      try {
-        const canvas = await html2canvas(el, {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: null
-        });
-        const imgData = canvas.toDataURL(
-          'image/jpeg',
-          1.0
-        );
-        const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4'
-        });
-        const imgWidth = 210;
-        const imgHeight =
-          (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(
-          imgData,
-          'JPEG',
-          0,
-          0,
-          imgWidth,
-          imgHeight
-        );
-        pdf.save(
-          `${current.name
-            .toLowerCase()
-            .replace(/\s+/g, '-')}-biodata.pdf`
-        );
-      } catch (e) {
-        console.error(e);
-        alert(
-          'Error generating PDF. Please try again.'
-        );
-      } finally {
-        setIsDownloading(false);
-      }
+
+const handleDownload = useCallback(async () => {
+  if (!current) return;
+  setIsDownloading(true);
+
+  // 🔥 Track download click (fire before async work so it's never missed)
+  track('template_downloaded', {
+    template_id: current.id,
+    template_name: current.name,
+    template_category: current.category,
+    template_community: current.community,
+  });
+
+  await new Promise((r) => setTimeout(r, 100));
+  const el = document.getElementById(`template-${current.id}`);
+  if (el) {
+    try {
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null
+      });
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+      pdf.save(
+        `${current.name.toLowerCase().replace(/\s+/g, '-')}-biodata.pdf`
+      );
+    } catch (e) {
+      console.error(e);
+      alert('Error generating PDF. Please try again.');
+    } finally {
+      setIsDownloading(false);
     }
-  }, [current]);
+  }
+}, [current]);
 
   const backToTemplates = useCallback(() => {
     navigate('/templates', { state: { formData } });
