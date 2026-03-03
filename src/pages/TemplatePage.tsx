@@ -10,7 +10,7 @@ import preview4 from "/assets/template4Preview.webp";
 import preview5 from "/assets/template5Preview.webp";
 import preview6 from "/assets/template6Preview.webp";
 import preview7 from "/assets/template7Preview.webp";
-import { track } from '@vercel/analytics';
+import { trackEvent } from '../utils/analytics';
 interface TemplateData {
   id: number;
   preview: string;
@@ -510,12 +510,11 @@ const TemplatePage = memo(() => {
   }, [formData, navigate]);
 
   // Memoized callback for handling template selection
-  const handleViewDetails = useCallback((templateId: number) => {
-  // Find the template name for a more readable event label
+const handleViewDetails = useCallback((templateId: number) => {
   const template = TEMPLATES.find(t => t.id === templateId);
 
-  // 🔥 Track which template was clicked
-  track('template_clicked', {
+  // 🔥 Track template click
+  trackEvent('template_clicked', {
     template_id: templateId,
     template_name: template?.name ?? 'Unknown',
     template_category: template?.category ?? 'Unknown',
