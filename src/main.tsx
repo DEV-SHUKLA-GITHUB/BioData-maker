@@ -15,7 +15,7 @@ declare global {
     ) => void;
   }
 }
-
+ 
 // Web Vitals reporting function
 const reportWebVitals = (metric: any) => {
   try {
