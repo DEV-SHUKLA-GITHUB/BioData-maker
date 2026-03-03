@@ -3,15 +3,6 @@ import { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
 // Extend the Window interface to include gtag
-declare global {
-  interface Window {
-    gtag?: (
-      command: 'config' | 'event' | 'exception',
-      targetId: string,
-      config?: Record<string, any>
-    ) => void;
-  }
-}
 
 interface Props {
   children: ReactNode;
